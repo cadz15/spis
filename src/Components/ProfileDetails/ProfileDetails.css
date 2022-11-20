@@ -1,0 +1,9 @@
+
+.profile-avatar {
+    background-color: #fff;
+    position: relative;
+    top: -40px;
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+}

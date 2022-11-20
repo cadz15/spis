@@ -1,0 +1,7 @@
+
+.event-list-table-container {
+    max-height: calc(100vh - 120px);
+    min-height: fit-content;
+    overflow-x: hidden;
+    overflow-y: auto;
+}

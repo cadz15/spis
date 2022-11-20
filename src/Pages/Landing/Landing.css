@@ -1,0 +1,44 @@
+
+.main-banner {
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    position: relative;
+    overflow: hidden;
+    background-color: white;
+    min-height: 100vh;
+    width: 100%;
+    padding-top: 10%
+}
+
+.main-banner::after {
+    content: '';
+    background-image: url(https://technext.github.io/chain/assets/images/slider-left-dec.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    position: absolute;
+    left: -10px;
+    top: -120px;
+    width: 100vw;
+    height: 140vh;
+    z-index: 1;
+}
+
+.z-index-5 {
+    z-index: 5;
+}
+
+.login-body {
+    position: relative;
+    padding-top: 60px;
+}
+
+.login-icon {
+    position: absolute;
+    top: -50px;
+    left: 40%;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    background-color: aquamarine;
+}

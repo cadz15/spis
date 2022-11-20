@@ -1,0 +1,9 @@
+
+.document-card-table thead tr th {
+    padding: 15px 10px;
+    background-color: #ecf0f5;
+}
+
+.document-card-table tbody tr th {
+    padding: 15px 10px;
+}

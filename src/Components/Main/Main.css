@@ -1,0 +1,17 @@
+:root {
+    
+    --text-subtext-alt: rgb(252, 249, 249);
+}
+
+.subtext {
+    color: var(--text-subtext-alt);
+}
+
+.main-content {
+    overflow-x: hidden;
+}
+
+.breadcrumbs-text {
+    font-size: small;
+    font-weight: 400;
+}

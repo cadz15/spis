@@ -1,0 +1,22 @@
+
+.event-list-title {
+    width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.event-list-head {
+    max-width: 100%;
+}
+
+.event-list-date {
+    font-size: 0.8rem;
+}
+
+.event-list-table-container {
+    max-height: calc(100vh - 120px);
+    min-height: fit-content;
+    overflow-x: hidden;
+    overflow-y: auto;
+}

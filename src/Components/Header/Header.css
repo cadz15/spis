@@ -1,0 +1,53 @@
+.header {
+    display: flex;
+    align-items: center;
+    width: 100vw;
+    height: 60px;
+    color: #fff;
+    overflow: hidden;
+}
+
+
+.logo {
+    width: 230px;
+    padding: 10px;
+    font-weight: bolder;
+    color: #fff !important;
+}
+
+.logo a {
+    
+    color: #fff !important;
+}
+
+
+.menu-toggle {
+    font-size: larger;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.header-logout {
+    color: #fff !important;
+}
+
+
+@media (max-width: 576px) { 
+    .header {
+        justify-content: space-between;
+    }
+
+    .logo {
+        order: 1;
+        width: 50%;
+    }
+
+    .header-logout {
+        order: 2;
+        padding-right: 10px;
+    }
+
+    .menu-toggle {
+        order: 0;
+    }
+}

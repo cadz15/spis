@@ -1,0 +1,25 @@
+
+.card {
+    background-color: #fff !important;
+}
+
+.card-header {
+    background-color: #fff;
+}
+
+.event-icon {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: #fff;
+  z-index: 2;
+}
+
+.overflow-hidden {
+    overflow: hidden;
+}
+

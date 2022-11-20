@@ -1,0 +1,14 @@
+
+.card {
+    border-radius: 3px !important;
+    border: 0;
+    box-shadow: 0 2px 10px -1px rgba(69, 90, 100, 0.3);
+}
+
+.card-footer {
+    border-radius: 0 !important;
+}
+
+.bg-white {
+    background-color: white !important;
+}
