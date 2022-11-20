@@ -1,7 +1,7 @@
 import React from 'react';
 import { RiHome3Line } from 'react-icons/ri';
-import EventForm from '../Components/EventForm/EventForm';
-import EventList from '../Components/EventList/EventList';
+import ScholarshipForm from '../Components/ScholarshipForm/ScholarshipForm';
+import ScholarshipList from '../Components/ScholashipList/ScholarshipList';
 
 const AdminScholarship = () => {
   return (
@@ -18,10 +18,10 @@ const AdminScholarship = () => {
                     <div className='col-md-12 col-lg-12'>
                         <div className='row'>
                             <div className='col-sm-12 col-lg-6 col-md-12 mb-3'>
-                                <EventForm />
+                                <ScholarshipForm />
                             </div>
                             <div className='col-sm-12  col-lg-6 col-md-12 mb-3'>
-                                <EventList />
+                                <ScholarshipList />
                             </div>
 
                         </div>
