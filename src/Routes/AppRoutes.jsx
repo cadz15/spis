@@ -9,10 +9,12 @@ import AdminQuery from '../Pages/AdminQuery';
 import AdminScholarship from '../Pages/AdminScholarship';
 import AdminSMSBlast from '../Pages/AdminSMSBlast';
 import UnknownError from '../Pages/Error/UnknownError';
+import ForgotPassword from '../Pages/Landing/ForgotPassword';
 import Landing from '../Pages/Landing/Landing';
 import ListScholar from '../Pages/ListScholar';
 import Profile from '../Pages/Profile';
 import RegisterScholar from '../Pages/RegisterScholar';
+import ScholarDocumentUpload from '../Pages/ScholarDocumentUpload';
 
 const AppRoutes = () => {
   return (
@@ -34,7 +36,7 @@ const AppRoutes = () => {
         <Route path='/scholar'  element={<AdminDashboard />} />
         <Route path='dashboard'  element={<AdminDashboard />} />
         <Route path='event'  element={<AdminEvent />} />
-        <Route path='scholardocument'  element={<AdminDocument />} />
+        <Route path='scholardocument'  element={<ScholarDocumentUpload />} />
         <Route path='query'  element={<AdminQuery />} />
         <Route path='profiles'  element={<Profile />} />
       </Route>
@@ -42,6 +44,7 @@ const AppRoutes = () => {
 
         
       <Route path='/'  element={<Landing />} />
+      <Route path='/ForgotPassword' element={<ForgotPassword />} />
       <Route path='*'  element={<UnknownError />} />
 
     </Routes>

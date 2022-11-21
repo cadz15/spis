@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './Landing.css';
 
 const Landing = () => {
@@ -38,6 +39,7 @@ const Landing = () => {
                                                     <div className="my-3">
                                                         <input className="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked />
                                                         <label className="px-2" htmlFor="flexCheckChecked">Save credentials.</label>
+                                                        <span><Link to='/ForgotPassword' className='text-primary'>Forgot Password?</Link></span>
                                                     </div>
                                                     <button className="btn btn-block btn-primary p-2 px-3">Login</button>
                                                 </div>

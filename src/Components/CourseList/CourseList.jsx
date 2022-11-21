@@ -1,6 +1,6 @@
 import React from 'react';
 
-const CourseList = () => {
+const CourseList = (props) => {
   return (
     <div className="card latest-update-card p-0">
         <div className="card-header p-3">
@@ -26,7 +26,7 @@ const CourseList = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    <tr tabIndex={1} onClick={(e) => {props.handleListSelect(e)}} className="cursor-pointer">
                         <td className='px-4'>
                             <div className='event-list-head pb-2'>
                                 doremon and friends

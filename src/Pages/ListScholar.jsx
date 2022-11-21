@@ -1,10 +1,10 @@
 import React from 'react';
 import { RiHome3Line } from 'react-icons/ri';
-import EventForm from '../Components/EventForm/EventForm';
-import EventList from '../Components/EventList/EventList';
 import ScholarList from '../Components/ScholarList/ScholarList';
 
 const ListScholar = () => {
+
+
   return (
     <div className='main-content-bg'>
         <div className='main-content p-4'>

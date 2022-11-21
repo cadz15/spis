@@ -1,7 +1,40 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import './DocumentCard.css';
 
 const DocumentCard = () => {
+    const [dataList, setDataList] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const  fetchData = async () => {
+        setIsLoading(true);
+
+        await fetch(`api/link`) //change for API LINK
+        
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(
+                `This is an HTTP error: The status is ${response.status}`
+                );
+            }
+            return response.json();
+        })
+        
+        .then((actualData) => setDataList(actualData))
+        
+        .catch((err) => {
+            console.log(err.message);
+        })
+        .finally(()=> {
+            setIsLoading(false);
+        });
+    }
+
+    useEffect(() => {
+        // fetchData()
+    }, [])
+
+
   return (
     <div className="card latest-update-card p-0">
         <div className="card-header p-3">
@@ -10,36 +43,42 @@ const DocumentCard = () => {
             </div>
         </div>
         <div className="card-body p-0 m-0 ">
-            <div className="latest-update-box ">
+            <div className={`latest-update-box  ${isLoading? 'list-loading':''}`}>
                 
             <table className="table table-hover document-card-table">
-                <thead>
-                    <tr>
-                        <th scope="col">Scholar</th>
-                        <th scope="col">Scholarship</th>
-                        <th scope="col">Document</th>
-                        <th scope="col">Status</th>
-                    </tr>
-                </thead>
+                {dataList.length > 0 && (
+                    <thead>
+                        <tr>
+                            <th scope="col">Scholar</th>
+                            <th scope="col">Scholarship</th>
+                            <th scope="col">Document</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                )}
+
                 <tbody>
-                    <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                    </tr>
-                    <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                    </tr>
+                {dataList.length > 0 ?  
+                     dataList.map(({i, documentData}) => (
+                        <tr >
+                            <th scope="row">{documentData.scholarName}</th>
+                            <td>{documentData.scholarship}</td>
+                            <td>{documentData.documentName}</td>
+                            <td>{documentData.documentStatus}</td>
+                        </tr>
+                     ))
+                     :
+                     (<div className='empty-list'>
+                         No Document!
+                     </div>)
+                }   
+                    
                 </tbody>
             </table>
                 
             </div>
             <div className="text-center">
-                <a href="#!" className="b-b-primary text-primary">View all Documents</a>
+                <Link to={'/admin/scholardocument'} className="b-b-primary text-primary">View all Documents</Link>
             </div>
         </div>
     </div>

@@ -1,13 +1,44 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { RiHome3Line } from 'react-icons/ri';
 import ConcernCard from '../ConcernCard/ConcernCard';
 import DocumentCard from '../DocumentCard/DocumentCard';
-import EventCard from '../EventCard/EventCard';
 import EventList from '../EventList/EventList';
 import ScholarCard from '../ScholarCard/ScholarCard';
 import './Main.css';
 
 const Main = () => {
+    const [dataList, setDataList] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const  fetchData = async () => {
+        setIsLoading(true);
+
+        await fetch(`api/link`) //change for API LINK
+        
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(
+                `This is an HTTP error: The status is ${response.status}`
+                );
+            }
+            return response.json();
+        })
+        
+        .then((actualData) => setDataList(actualData))
+        
+        .catch((err) => {
+            console.log(err.message);
+        })
+        .finally(()=> {
+            setIsLoading(false);
+        });
+    }
+
+    useEffect(() => {
+        // fetchData()
+    }, []);
+
+
   return (
     <div className='main-content-bg'>
         <div className='main-content p-4'>
@@ -23,16 +54,16 @@ const Main = () => {
                     <div className='col-sm-12 col-md-12'>
                         <div className='row'>
                             <div className='col-md-6  col-lg-3 col-sm-12 mb-3'>
-                                <ScholarCard cardType='primary' />
+                                <ScholarCard cardType='primary' data={dataList} />
                             </div>
                             <div className='col-md-6 col-lg-3 col-sm-12  mb-3'>
-                                <ScholarCard cardType='success' />
+                                <ScholarCard cardType='success' data={dataList} />
                             </div>
                             <div className='col-md-6 col-lg-3 col-sm-12  mb-3'>
-                                <ScholarCard cardType='danger' />
+                                <ScholarCard cardType='danger' data={dataList} />
                             </div>
                             <div className='col-md-6 col-lg-3 col-sm-12  mb-3'>
-                                <ScholarCard cardType='warning' />
+                                <ScholarCard cardType='warning' data={dataList} />
                             </div>
                         </div>
                     </div>
