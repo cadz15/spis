@@ -4,9 +4,12 @@ import ChangePassword from '../Components/ChangePassword/ChangePassword';
 import ProfileDetails from '../Components/ProfileDetails/ProfileDetails';
 import EventList from '../Components/EventList/EventList';
 import DocumentCard from '../Components/DocumentCard/DocumentCard';
+import useAuthStore from '../Store/globalStates';
 
 
 const Profile = () => {
+    const { userAuth } = useAuthStore();
+
   return (
     <div className='main-content-bg'>
         <div className='main-content p-4'>
@@ -30,18 +33,22 @@ const Profile = () => {
                 </div>
             </div>
 
-            <div className='row'>
-                <div className='col-md-12 col-lg-12'>
-                    <div className='row'>
-                        <div className='col-sm-12 col-lg-6 col-md-12 mb-3'>
-                            <EventList />
-                        </div>
-                        <div className='col-sm-12  col-lg-6 col-md-12 mb-3'>
-                            <DocumentCard />
+            {userAuth.account_type !== 1 && (<>
+                <div className='row'>
+                    <div className='col-md-12 col-lg-12'>
+                        <div className='row'>
+                            <div className='col-sm-12 col-lg-6 col-md-12 mb-3'>
+                                <EventList />
+                            </div>
+                            <div className='col-sm-12  col-lg-6 col-md-12 mb-3'>
+                                <DocumentCard />
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </>)
+            }
+            
         </div>
     </div>
   )

@@ -10,28 +10,44 @@ const AdminEvent = () => {
     const [eventsList, setEventsList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
-    const  fetchData = async () => {
-        setIsLoading(true);
+    const  fetchData = () => {
+        // setIsLoading(true);
 
-        await fetch(`api/link`) //Change for API Link
-        
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error(
-                `This is an HTTP error: The status is ${response.status}`
-                );
-            }
-            return response.json();
-        })
-        
-        .then((actualData) => setEventsList(actualData))
-        
-        .catch((err) => {
-            console.log(err.message);
-        })
-        .finally(()=> {
-            setIsLoading(false);
-        });
+       // await axios.get('http://slsu_spis.localtest/api/events',{headers: {
+        //         "Authorization" : `Bearer ${jwt_token}`,
+        //         'withCredentials': 'true'
+        //         }
+        //         }
+        //     )
+        //     .then((response) => {
+        //         setDataList(response.data);
+        //         // console.log(response.data);
+        //     })
+        //     .catch((error) => {
+        //         console.log(error);
+        //         console.log(jwt_token);
+        //     })
+
+        setEventsList([
+            {
+                id: 0,
+                event: 'This is dummy event #1',
+                event_date: '10/12/2022',
+                event_detail: 'This is sample Event details. Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste assumenda pariatur recusandae libero ipsa amet aliquid ea excepturi nisi sunt, sit impedit incidunt vitae quod placeat praesentium reiciendis. Ipsa, sapiente.' 
+            },
+            {
+                id: 1,
+                event: 'This is dummy event #2',
+                event_date: '10/12/2022',
+                event_detail: 'This is sample Event details. Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste assumenda pariatur recusandae libero ipsa amet aliquid ea excepturi nisi sunt, sit impedit incidunt vitae quod placeat praesentium reiciendis. Ipsa, sapiente.' 
+            },
+            {
+                id: 2,
+                event: 'This is dummy event #3',
+                event_date: '10/12/2022',
+                event_detail: 'This is sample Event details. Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste assumenda pariatur recusandae libero ipsa amet aliquid ea excepturi nisi sunt, sit impedit incidunt vitae quod placeat praesentium reiciendis. Ipsa, sapiente.' 
+            },
+        ])
     }
 
     const handleShowModal = (e) => {
@@ -44,7 +60,7 @@ const AdminEvent = () => {
     }
 
     useEffect(() => {
-        // fetchData()
+        fetchData()
     }, [])
 
   return (

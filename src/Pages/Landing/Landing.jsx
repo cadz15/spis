@@ -1,47 +1,90 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './Landing.css';
+import useAuthStore from '../../Store/globalStates';
 
 const Landing = () => {
-  return (
-    <div className="main-banner">
-        <div className="container d-flex align-items-center">
-            <div className="row">
-                <div className="col-lg-12">
+    const [hideError, setHideError] = useState(true);
+    const { userAuth, addUser, setToken } = useAuthStore();
+    const navigate = useNavigate();
+
+    const handleLogin = async () => {
+        const username = document.getElementById('floatingUsername').value;
+        const password = document.getElementById('floatingPassword').value;
+
+        axios.post(`http://slsu_spis.localtest/api/auth/login`, { username, password})
+        .then((response) => {
+            response.data.user['account_type'] = response.data.account_type
+            addUser(response.data.user);
+            setToken(response.data.access_token);
+            if(userAuth.account_type === 1){
+                setHideError(true);
+                navigate('/admin/dashboard');
+            }else {
+                setHideError(true);
+                navigate('/scholar/dashboard');
+            }
+        })
+        .catch((error) => {
+            setHideError(false);
+        });
+        
+    }
+
+    useEffect(() => {
+        if(userAuth?.account_type === 1){
+            navigate('/admin/dashboard');
+        }else if(userAuth?.account_type === 2) {
+            navigate('/scholar/dashboard');
+        }
+    },[])
+
+
+   return (
+        <div className="main-banner">
+                <div className="container d-flex align-items-center">
                     <div className="row">
-                        <div className="col-lg-6 align-self-center mb-5">
-                            <div className="left-content ">
-                                <div className="row">
-                                    <div className="col-lg-12 z-index-5 ">
-                                        <h2>Scholar Profiling Information System</h2>
-                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis inventore error ut ab non ipsum tempora laboriosam sed, accusantium magni porro deserunt doloribus! Ex corrupti non magni, iusto mollitia aut.</p>
-                                    </div>                        
+                        <div className="col-lg-12">
+                            <div className="row">
+                                <div className="col-lg-6 align-self-center mb-5">
+                                    <div className="left-content ">
+                                        <div className="row">
+                                            <div className="col-lg-12 z-index-5 ">
+                                                <h2>Scholar Profiling Information System</h2>
+                                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis inventore error ut ab non ipsum tempora laboriosam sed, accusantium magni porro deserunt doloribus! Ex corrupti non magni, iusto mollitia aut.</p>
+                                            </div>                        
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div className="col-lg-6 z-index-5">
-                            <div className="auth-wrapper">
-                                <div className="auth-content">
-                                    <div className="card">
-                                        <div className="row align-items-center text-center">
-                                            <div className="col-md-12">
-                                                <div className="card-body login-body">
-                                                    <img src="https://cdn-icons-png.flaticon.com/512/5526/5526478.png" alt="" className="login-icon mb-4" />
-                                                    <h4 className="mb-3 f-w-400">Signin</h4>
-                                                    <div className=" form-floating mb-3">
-                                                        <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
-                                                        <label htmlFor="floatingInput">Email address</label>
+                                <div className="col-lg-6 z-index-5">
+                                    <div className="auth-wrapper">
+                                        <div className="auth-content">
+                                            <div className="card">
+                                                <div className="row align-items-center text-center">
+                                                    <div className="col-md-12">
+                                                        <div className="card-body login-body">
+                                                            <img src="https://cdn-icons-png.flaticon.com/512/5526/5526478.png" alt="" className="login-icon mb-4" />
+                                                            <h4 className="mb-3 f-w-400">Signin</h4>
+                                                            <div class={`alert alert-danger alert-dismissible fade show ${hideError? 'd-none': ''} `} role="alert">
+                                                                <strong>Error!</strong> Wrong username or password.
+                                                            </div>
+                                                            <div className=" form-floating mb-3">
+                                                                <input type="email" className="form-control" id="floatingUsername" placeholder="name@example.com" />
+                                                                <label htmlFor="floatingUsername">Email address</label>
+                                                            </div>
+                                                            <div className="form-floating">
+                                                                <input type="password" className="form-control" id="floatingPassword" placeholder="Password" />
+                                                                <label htmlFor="floatingPassword">Password</label>
+                                                            </div>
+                                                            <div className="my-3">
+                                                                <input className="form-check-input" type="checkbox" value="" id="flexCheckChecked" defaultChecked />
+                                                                <label className="px-2" htmlFor="flexCheckChecked">Save credentials.</label>
+                                                                <span><Link to='/ForgotPassword' className='text-primary'>Forgot Password?</Link></span>
+                                                            </div>
+                                                            <button className="btn btn-block btn-primary p-2 px-3" onClick={handleLogin}>Login</button>
+                                                        </div>
                                                     </div>
-                                                    <div className="form-floating">
-                                                        <input type="password" className="form-control" id="floatingPassword" placeholder="Password" />
-                                                        <label htmlFor="floatingPassword">Password</label>
-                                                    </div>
-                                                    <div className="my-3">
-                                                        <input className="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked />
-                                                        <label className="px-2" htmlFor="flexCheckChecked">Save credentials.</label>
-                                                        <span><Link to='/ForgotPassword' className='text-primary'>Forgot Password?</Link></span>
-                                                    </div>
-                                                    <button className="btn btn-block btn-primary p-2 px-3">Login</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -51,9 +94,8 @@ const Landing = () => {
                         </div>
                     </div>
                 </div>
-            </div>
         </div>
-  </div>
+    
   )
 }
 

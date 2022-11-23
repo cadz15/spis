@@ -1,5 +1,7 @@
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { RiHome3Line } from 'react-icons/ri';
+import useAuthStore from '../../Store/globalStates';
 import ConcernCard from '../ConcernCard/ConcernCard';
 import DocumentCard from '../DocumentCard/DocumentCard';
 import EventList from '../EventList/EventList';
@@ -9,33 +11,38 @@ import './Main.css';
 const Main = () => {
     const [dataList, setDataList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const { jwt_token } = useAuthStore();
 
-    const  fetchData = async () => {
-        setIsLoading(true);
-
-        await fetch(`api/link`) //change for API LINK
-        
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error(
-                `This is an HTTP error: The status is ${response.status}`
-                );
-            }
-            return response.json();
-        })
-        
-        .then((actualData) => setDataList(actualData))
-        
-        .catch((err) => {
-            console.log(err.message);
-        })
-        .finally(()=> {
-            setIsLoading(false);
-        });
-    }
+    // axios.post(`apiLink`, {}, {headers: {Authorization: "Bearer " + jwt_token}})
+    // .then((response) => {
+    //     setDataList(response.data);
+    // });
+  
 
     useEffect(() => {
-        // fetchData()
+        setDataList([
+            {
+            cardType: 'primary',
+            scholarship: 'CHED',
+            scholarshipActiveTotal: 15,
+            scholarshipTotal: 200
+        },{
+            cardType: 'success',
+            scholarship: 'FHE',
+            scholarshipActiveTotal: 10,
+            scholarshipTotal: 200
+        },{
+            cardType: 'warning',
+            scholarship: 'DOST',
+            scholarshipActiveTotal: 23,
+            scholarshipTotal: 200
+        },{
+            cardType: 'danger',
+            scholarship: 'TES',
+            scholarshipActiveTotal: 7,
+            scholarshipTotal: 200
+        },
+    ]);
     }, []);
 
 
@@ -53,18 +60,11 @@ const Main = () => {
                 <div className='row'>
                     <div className='col-sm-12 col-md-12'>
                         <div className='row'>
-                            <div className='col-md-6  col-lg-3 col-sm-12 mb-3'>
-                                <ScholarCard cardType='primary' data={dataList} />
-                            </div>
-                            <div className='col-md-6 col-lg-3 col-sm-12  mb-3'>
-                                <ScholarCard cardType='success' data={dataList} />
-                            </div>
-                            <div className='col-md-6 col-lg-3 col-sm-12  mb-3'>
-                                <ScholarCard cardType='danger' data={dataList} />
-                            </div>
-                            <div className='col-md-6 col-lg-3 col-sm-12  mb-3'>
-                                <ScholarCard cardType='warning' data={dataList} />
-                            </div>
+                            {dataList && dataList.map((dataScholarship) => 
+                            (<div className='col-md-6  col-lg-3 col-sm-12 mb-3'>
+                                <ScholarCard key={dataScholarship.scholarship} cardType={dataScholarship.cardType} data={dataScholarship} />
+                            </div>)
+                            )}
                         </div>
                     </div>
                 </div>

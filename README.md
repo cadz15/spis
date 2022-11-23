@@ -1,70 +1,56 @@
-# Getting Started with Create React App
+**How to start**
+First, you need to clone the repo
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+    git clone https://github.com/cadz15/spis.git
 
-## Available Scripts
+Then, go to the directory and install node modules
 
-In the project directory, you can run:
+    cd spis
+    npm install
+**Make sure you have node installed.*
 
-### `npm start`
+After that, start the environment
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+    npm start
+   
+   It should show like this
+   
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+    Compiled successfully!
+    
+    You can now view spis in the browser.
+    
+    Local:            http://localhost:3000 
+    On Your Network:  http://192.168.1.4:3000 
+    
+    webpack compiled successfully
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+***Note***
+*The  laravel API server is set to slsu_spis.localtest. To setup this,
 
-### `npm run build`
+Goto laragon>Preferences>Hostname Template
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+    {name}.test //from
+    {name}.localtest //to
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+|  Link | Status   |  Reason/Details |
+|-------|----------|-----------------|
+| `/`   | `working` |  Landing Page  |
+| `/ForgotPassword`  | `Under Construction`  | Forgot Password recovery  |
+|  `/admin` | `working`  | Dashboard for admin (with dummy data)  |
+|  `/admin/event` | `Under Construction`  |  Unable to create events |
+|  `/admin/smsblast` |  `Under Construction` | Unable to send smsblast (error on twillio API)  |
+|  `/admin/scholarship` |  `Under Construction`  | Unable to create scholarship  |
+| `/admin/register`  | `working`  | Register/Create Scholar  |
+|  `/admin/list` | `working`  | List of Scholar from database  (Unable to search as of now)|
+|  `/admin/query` | `Under Construction`  | Unable to create/reply query  |
+|  `/admin/scholardocument` |  `Under Construction` | Unable to view document  |
+|  `/admin/profile` | `working`  |  Able to view (Unable to update as of now) |
+|  `/admin/logout` | `working`  |  Able to logout |
+|  `/scholar/logout` | `working`  |  Able to logout |
+|  `/scholar/dashboard` | `Under Construction`  |  Able to view |
+|  `/scholar/event` | `Under Construction`  |  Unable to view specific event as of now|
+|  `/scholar/scholardocument` | `Under Construction`  |  Unable to Upload |
+|  `/scholar/profile` | `Under Construction`  |  `Unable to update details as of now` |

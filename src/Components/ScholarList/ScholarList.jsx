@@ -1,48 +1,72 @@
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import useAuthStore from '../../Store/globalStates';
 import './ScholarList.css';
 
 const ScholarList = () => {
-    const [dataList, setDataList] = useState([]);
+    const [dataResponse, setDataResponse] = useState([]);
     const [scholarshipList, setScholarshipList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const { jwt_token } = useAuthStore();
 
     const  fetchData = async (scholarName='', scholarship='') => {
         setIsLoading(true);
 
-        await fetch(`api/link`) //Change for API Link
-        
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error(
-                `This is an HTTP error: The status is ${response.status}`
-                );
-            }
-            return response.json();
-        })
-        
-        .then((actualData) => setDataList(actualData))
-        
-        .catch((err) => {
-            console.log(err.message);
-        })
-        .finally(()=> {
-            setIsLoading(false);
-        });
+        // fetch('http://slsu_spis.localtest/api/scholars', {headers: {'Authorization': `Bearer ${jwt_token}`}})
+        // .then((response) => {
+        //     console.log(response);
+        // }).catch((error) => {
+        //     console.log(error)
+        // })
+
+        await axios.get('http://slsu_spis.localtest/api/scholars',{headers: {
+                "Authorization" : `Bearer ${jwt_token}`,
+                'withCredentials': 'true'
+                }
+                }
+            )
+            .then((response) => {
+                setDataResponse(response.data);
+                // console.log(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+                console.log(jwt_token);
+            })
+            
+        setIsLoading(false);
     }
 
     const fetchScholarship = async () => {
-        await fetch(`api/link`) //Change for API Link
+        setScholarshipList([
+            {
+                scholarship: 'DOST-SEI (Department of Science and Technology - Science Education Institute)'
+            },
+            {
+                scholarship: 'TES (Tertiary Education Subsidy)'
+            },
+            {
+                scholarship: 'FHE (Free Higher Education)'
+            },
+            {
+                scholarship: 'CHED (Commision on Higher Education)'
+            },
+        ])
         
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error(
-                `This is an HTTP error: The status is ${response.status}`
-                );
-            }
-            return response.json();
-        })
-        
-        .then((actualData) => setScholarshipList(actualData))
+        // await axios.get('http://slsu_spis.localtest/api/scholarship',{headers: {
+        //         "Authorization" : `Bearer ${jwt_token}`,
+        //         'withCredentials': 'true'
+        //         }
+        //         }
+        //     )
+        //     .then((response) => {
+        //         setScholarshipList(response.data);
+        //         // console.log(response.data);
+        //     })
+        //     .catch((error) => {
+        //         console.log(error);
+        //         console.log(jwt_token);
+        //     })
     }
 
     const handleSearchButton = () => {
@@ -50,8 +74,8 @@ const ScholarList = () => {
     }
 
     useEffect(() => {
-       //fetchData
-       //fetchScholarship
+       fetchData()
+       fetchScholarship()
     }, [])
 
 
@@ -71,10 +95,11 @@ const ScholarList = () => {
                             <div className="form-floating mb-3">
                                 <select className="form-select" id='floatingScholarship'>
                                     <option value="0">All</option>
-                                    {scholarshipList.length > 0 &&
-                                        scholarshipList.map(({i, scholarshipData}) => (
-                                            <option value={scholarshipData.id}>{scholarshipData.scholarship}</option>
-                                        ))
+                                    {scholarshipList.length > 0 ? scholarshipList.map((scholarshipListData) => 
+                                        (<option value={scholarshipListData.scholarship}>{scholarshipListData.scholarship}</option>)
+                                        ) 
+                                        : 
+                                        ''
                                     }
                                 </select>
                                 <label htmlFor="floatingScholarship">Scholarship</label>
@@ -94,7 +119,7 @@ const ScholarList = () => {
                 <div className={`event-list-table-container ${isLoading? 'list-loading':''}`}>
                     
                 <table className="table table-hover event-list-table">
-                    {dataList.length > 0 && 
+                    {dataResponse?.length > 0 && 
                         (<thead>
                             <tr>
                                 <th className='py-3'>
@@ -114,29 +139,29 @@ const ScholarList = () => {
                     }
                     
                     <tbody>
-                        {dataList.length > 0 ? 
-                            dataList.map(({i, scholarData}) => (
-                                <tr>
-                                    <td className='py-3'>
-                                        {scholarData.scholarName}
-                                    </td>
-                                    <td className='py-3'>
-                                        {scholarData.scholarCourseYear}
-                                    </td>
-                                    <td className='py-3'>
-                                        {scholarData.scholarship}
-                                    </td>
-                                    <td className='py-3'>
-                                        <p className={`${scholarData.scholarStatus == 'active'? 'bg-success': 'bg-secondary'}`}>{scholarData.scholarStatus}</p>
-                                    </td>
-                                </tr>
+                        {dataResponse?.length > 0 ? 
+                            dataResponse[0].data.map((scholarData) => (
+                            <tr>
+                                <td className='py-3'>
+                                        {`${scholarData.first_name} ${scholarData.last_name}`}
+                                </td>
+                                <td className='py-3'>
+                                    {`${scholarData.course} ${scholarData.year_level}`}
+                                </td>
+                                <td className='py-3'>
+                                    {scholarData.scholarship_name}
+                                </td>
+                                <td className='py-3'>
+                                    {/* <p className={`${scholarData.scholarStatus == 'active'? 'bg-success': 'bg-secondary'}`}>{scholarData.scholarStatus}</p> */}
+                                </td>
+                            </tr>
                             ))
-                        :
+                            : 
                             (<div className='empty-list'>
                                 No Scholar can be found!
                             </div>
                             )
-                        }  
+                        }
                     </tbody>
                 </table>
                     

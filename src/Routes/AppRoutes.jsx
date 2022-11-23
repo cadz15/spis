@@ -19,7 +19,7 @@ import ScholarDocumentUpload from '../Pages/ScholarDocumentUpload';
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path='/admin'  element={<div> <AdminLayout > <Outlet /> </AdminLayout></div> } >
+      <Route path='/admin'  element={<div> <AdminLayout user={'admin'} > <Outlet /> </AdminLayout></div> } >
         <Route path='/admin'  element={<AdminDashboard />} />
         <Route path='dashboard'  element={<AdminDashboard />} />
         <Route path='event'  element={<AdminEvent />} />
@@ -32,7 +32,7 @@ const AppRoutes = () => {
         <Route path='query'  element={<AdminQuery />} />
         <Route path='profiles'  element={<Profile />} />
       </Route>
-      <Route path='/scholar'  element={<div> <AdminLayout > <Outlet /> </AdminLayout></div> } >
+      <Route path='/scholar'  element={<div> <AdminLayout user={'scholar'} > <Outlet /> </AdminLayout></div> } >
         <Route path='/scholar'  element={<AdminDashboard />} />
         <Route path='dashboard'  element={<AdminDashboard />} />
         <Route path='event'  element={<AdminEvent />} />

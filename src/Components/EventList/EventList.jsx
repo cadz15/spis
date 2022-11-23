@@ -6,32 +6,52 @@ const EventList = (props) => {
     const [isLoading, setIsLoading] = useState(false);
 
     const  fetchData = async () => {
-        setIsLoading(true);
+        // setIsLoading(true);
 
-        await fetch(`api/link`) //Change for API Link
-        
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error(
-                `This is an HTTP error: The status is ${response.status}`
-                );
-            }
-            return response.json();
-        })
-        
-        .then((actualData) => setDataList(actualData))
-        
-        .catch((err) => {
-            console.log(err.message);
-        })
-        .finally(()=> {
-            setIsLoading(false);
-        });
+       // await axios.get('http://slsu_spis.localtest/api/events',{headers: {
+        //         "Authorization" : `Bearer ${jwt_token}`,
+        //         'withCredentials': 'true'
+        //         }
+        //         }
+        //     )
+        //     .then((response) => {
+        //         setDataList(response.data);
+        //         // console.log(response.data);
+        //     })
+        //     .catch((error) => {
+        //         console.log(error);
+        //         console.log(jwt_token);
+        //     })
+
+        setDataList([
+            {
+                id: 0,
+                event: 'This is dummy event #1',
+                event_date: '10/12/2022',
+                event_detail: 'This is sample Event details. Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste assumenda pariatur recusandae libero ipsa amet aliquid ea excepturi nisi sunt, sit impedit incidunt vitae quod placeat praesentium reiciendis. Ipsa, sapiente.' 
+            },
+            {
+                id: 1,
+                event: 'This is dummy event #2',
+                event_date: '10/12/2022',
+                event_detail: 'This is sample Event details. Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste assumenda pariatur recusandae libero ipsa amet aliquid ea excepturi nisi sunt, sit impedit incidunt vitae quod placeat praesentium reiciendis. Ipsa, sapiente.' 
+            },
+            {
+                id: 2,
+                event: 'This is dummy event #3',
+                event_date: '10/12/2022',
+                event_detail: 'This is sample Event details. Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste assumenda pariatur recusandae libero ipsa amet aliquid ea excepturi nisi sunt, sit impedit incidunt vitae quod placeat praesentium reiciendis. Ipsa, sapiente.' 
+            },
+        ])
+
+        // setIsLoading(true);
+        console.log(props);
     }
     
     useEffect(() => {
+        console.log(props);
         if (Object.keys(props).length === 0){
-            // fetchData()
+            fetchData()
         }else{
             setIsLoading(props.isLoading);
             setDataList(props.data);
@@ -50,11 +70,10 @@ const EventList = (props) => {
             <div className={`event-list-table-container ${isLoading? 'list-loading':''}`}>
                 
             <table className={`table table-hover event-list-table  `}>
-                <tbody>
-                    
-                    {dataList.length > 0 ?
-                        dataList.map(({i, eventsData}) => (
-                            <tr tabIndex={eventsData.id} onClick={(e) => {props?.handleListSelect(e)}} className="cursor-pointer">
+                <tbody>                    
+                    {dataList?.length > 0 ? 
+                        dataList?.map((eventsData) => (
+                            <tr key={eventsData.id} tabIndex={eventsData.id} onClick={(e) => {props?.handleListSelect(e)}} className="cursor-pointer">
                                 <td className='px-4'>
                                     <div className='event-list-head pb-2'>
                                         <p className='p-0 m-0 fw-bold event-list-title col-md-12'>{eventsData.event}</p>
@@ -66,12 +85,11 @@ const EventList = (props) => {
                                 </td>
                             </tr>
                         ))
-                        :
-                        <div className='empty-list'>
-                            No Event!
-                        </div>
-                    }
-                    
+                    : 
+                    (<div className='empty-list'>
+                        No Event!
+                    </div>
+                    )}                    
                 </tbody>
             </table>
                 
