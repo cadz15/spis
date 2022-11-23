@@ -34,23 +34,11 @@ Goto laragon>Preferences>Hostname Template
     {name}.test //from
     {name}.localtest //to
 
+**WORKING FUNCTIONALITIES**
 
-|  Link | Status   |  Reason/Details |
+|  Functionality | Status   |  Reason/Details |
 |-------|----------|-----------------|
-| `/`   | `working` |  Landing Page  |
-| `/ForgotPassword`  | `Under Construction`  | Forgot Password recovery  |
-|  `/admin` | `working`  | Dashboard for admin (with dummy data)  |
-|  `/admin/event` | `Under Construction`  |  Unable to create events |
-|  `/admin/smsblast` |  `Under Construction` | Unable to send smsblast (error on twillio API)  |
-|  `/admin/scholarship` |  `Under Construction`  | Unable to create scholarship  |
-| `/admin/register`  | `working`  | Register/Create Scholar  |
-|  `/admin/list` | `working`  | List of Scholar from database  (Unable to search as of now)|
-|  `/admin/query` | `Under Construction`  | Unable to create/reply query  |
-|  `/admin/scholardocument` |  `Under Construction` | Unable to view document  |
-|  `/admin/profile` | `working`  |  Able to view (Unable to update as of now) |
-|  `/admin/logout` | `working`  |  Able to logout |
-|  `/scholar/logout` | `working`  |  Able to logout |
-|  `/scholar/dashboard` | `Under Construction`  |  Able to view |
-|  `/scholar/event` | `Under Construction`  |  Unable to view specific event as of now|
-|  `/scholar/scholardocument` | `Under Construction`  |  Unable to Upload |
-|  `/scholar/profile` | `Under Construction`  |  `Unable to update details as of now` |
+| `Auth`   | `working` |  Able to  `login`, `logout`, `secure route` |
+| `Register Scholar`  | `working`  | Able to Register Scholar  |
+| `List Scholar`  | `working`  | Able to view all  Registered Scholar  |
+
