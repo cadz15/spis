@@ -7,13 +7,13 @@ import './Header.css';
 const Header = (props) => {
 
   return (
-    <div className='header '>
+    <div className='header px-2'>
         <div className='logo'>
           <Link to={`/`}>
             Scholar Profiling
           </Link>
         </div>
-        <RiMenu2Line className='menu-toggle' onClick={props.handleMenuToggle}/>
+        <RiMenu2Line className='menu-toggle transparent' />
         <Link to="/logout" className=' header-logout d-sm-block d-md-none header-logout'>
           <MdOutlineLogout className='' />
           Logout

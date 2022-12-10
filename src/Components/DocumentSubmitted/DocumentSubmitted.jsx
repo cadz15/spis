@@ -125,8 +125,8 @@ const DocumentSubmitted = () => {
 
                     <tbody>
                         {dataList.length > 0 ? 
-                            dataList.map(({i, documentData}) => (
-                                <tr>
+                            dataList.map((documentData, index) => (
+                                <tr key={index}>
                                     <td className='py-3'>
                                         {documentData.scholarName}
                                     </td>
@@ -144,9 +144,15 @@ const DocumentSubmitted = () => {
                                 </tr>
                             ))
                         :
-                            (<div className='empty-list'>
-                                No Document can be found!
-                            </div>
+                            (
+                            <tr>
+                                <td>
+                                    <div className='empty-list'>
+                                        No Document can be found!
+                                    </div>
+                                </td>
+                            </tr>
+                            
                             )
                         }  
                         

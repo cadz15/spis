@@ -3,12 +3,17 @@ import { RiHome3Line } from 'react-icons/ri';
 import ScholarshipEditModal from '../Components/ScholarshipEditModal/ScholarshipEditModal';
 import ScholarshipForm from '../Components/ScholarshipForm/ScholarshipForm';
 import ScholarshipList from '../Components/ScholashipList/ScholarshipList';
+import useTitle from '../Utils/useTitle';
 
 const AdminScholarship = () => {
     const [selectedId, setSelectedId] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [dataList, setDataList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+
+
+    useTitle('Scholarship master list'); // PAGE TITLE
+
 
     const handleShowModal = (e) => {
         if(e.currentTarget === e.target) setShowModal(current => !current);

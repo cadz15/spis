@@ -1,9 +1,10 @@
 import React from 'react';
 import { RiHome3Line } from 'react-icons/ri';
 import ScholarList from '../Components/ScholarList/ScholarList';
+import useTitle from '../Utils/useTitle';
 
 const ListScholar = () => {
-
+    useTitle('Scholar list'); // PAGE TITLE
 
   return (
     <div className='main-content-bg'>

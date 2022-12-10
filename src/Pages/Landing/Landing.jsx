@@ -3,42 +3,42 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Landing.css';
 import useAuthStore from '../../Store/globalStates';
+import useTitle from '../../Utils/useTitle';
 
 const Landing = () => {
-    const [hideError, setHideError] = useState(true);
+    const [error, setError] = useState(null);
     const { userAuth, addUser, setToken } = useAuthStore();
     const navigate = useNavigate();
+
+    useTitle('Welcome to SPIS'); // PAGE TITLE
 
     const handleLogin = async () => {
         const username = document.getElementById('floatingUsername').value;
         const password = document.getElementById('floatingPassword').value;
-
-        axios.post(`http://slsu_spis.localtest/api/auth/login`, { username, password})
+        
+        await axios.post(`${process.env.REACT_APP_API_LINK}/auth/login`, {username, password})
         .then((response) => {
-            response.data.user['account_type'] = response.data.account_type
-            addUser(response.data.user);
-            setToken(response.data.access_token);
-            if(userAuth.account_type === 1){
-                setHideError(true);
-                navigate('/admin/dashboard');
-            }else {
-                setHideError(true);
-                navigate('/scholar/dashboard');
+            if(response.data.hasOwnProperty('errors')){
+                setError('Empty Username or Password!');
+            }else{
+                addUser(response.data.user);
+                setToken(response.data.access_token);
             }
         })
         .catch((error) => {
-            setHideError(false);
+            setError(error.response?.data?.message);
         });
         
     }
 
     useEffect(() => {
+        setError(null);
         if(userAuth?.account_type === 1){
-            navigate('/admin/dashboard');
+            navigate('/admin/dashboard/');
         }else if(userAuth?.account_type === 2) {
-            navigate('/scholar/dashboard');
+            navigate('/scholar/dashboard/');
         }
-    },[])
+    },[userAuth])
 
 
    return (
@@ -66,8 +66,8 @@ const Landing = () => {
                                                         <div className="card-body login-body">
                                                             <img src="https://cdn-icons-png.flaticon.com/512/5526/5526478.png" alt="" className="login-icon mb-4" />
                                                             <h4 className="mb-3 f-w-400">Signin</h4>
-                                                            <div class={`alert alert-danger alert-dismissible fade show ${hideError? 'd-none': ''} `} role="alert">
-                                                                <strong>Error!</strong> Wrong username or password.
+                                                            <div class={`alert alert-danger alert-dismissible fade show ${error == null ? 'd-none': ''} `} role="alert">
+                                                                <strong>Error!</strong> {`${error}`}
                                                             </div>
                                                             <div className=" form-floating mb-3">
                                                                 <input type="email" className="form-control" id="floatingUsername" placeholder="name@example.com" />

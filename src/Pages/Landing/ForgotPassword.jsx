@@ -1,6 +1,9 @@
 import React from 'react';
+import useTitle from '../../Utils/useTitle';
 
 const ForgotPassword = () => {
+    useTitle('Forgot password'); // PAGE TITLE
+    
   return (
     <div className="main-banner">
         <div className="container ">

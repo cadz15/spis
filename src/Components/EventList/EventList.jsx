@@ -45,11 +45,9 @@ const EventList = (props) => {
         ])
 
         // setIsLoading(true);
-        console.log(props);
     }
     
     useEffect(() => {
-        console.log(props);
         if (Object.keys(props).length === 0){
             fetchData()
         }else{
@@ -86,9 +84,15 @@ const EventList = (props) => {
                             </tr>
                         ))
                     : 
-                    (<div className='empty-list'>
-                        No Event!
-                    </div>
+                    (
+                    <tr>
+                        <td>
+                            <div className='empty-list'>
+                                No Event!
+                            </div>
+
+                        </td>
+                    </tr>
                     )}                    
                 </tbody>
             </table>

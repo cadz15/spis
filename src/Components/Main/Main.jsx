@@ -60,9 +60,9 @@ const Main = () => {
                 <div className='row'>
                     <div className='col-sm-12 col-md-12'>
                         <div className='row'>
-                            {dataList && dataList.map((dataScholarship) => 
-                            (<div className='col-md-6  col-lg-3 col-sm-12 mb-3'>
-                                <ScholarCard key={dataScholarship.scholarship} cardType={dataScholarship.cardType} data={dataScholarship} />
+                            {dataList && dataList.map((dataScholarship, index) => 
+                            (<div  key={index} className='col-md-6  col-lg-3 col-sm-12 mb-3'>
+                                <ScholarCard cardType={dataScholarship.cardType} data={dataScholarship} />
                             </div>)
                             )}
                         </div>

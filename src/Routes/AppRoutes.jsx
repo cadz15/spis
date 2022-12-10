@@ -15,6 +15,7 @@ import ListScholar from '../Pages/ListScholar';
 import Profile from '../Pages/Profile';
 import RegisterScholar from '../Pages/RegisterScholar';
 import ScholarDocumentUpload from '../Pages/ScholarDocumentUpload';
+import ScholarProfile from '../Pages/ScholarProfile';
 
 const AppRoutes = () => {
   return (
@@ -31,6 +32,7 @@ const AppRoutes = () => {
         <Route path='scholardocument'  element={<AdminDocument />} />
         <Route path='query'  element={<AdminQuery />} />
         <Route path='profiles'  element={<Profile />} />
+        <Route path='profiles/:id'  element={<ScholarProfile />} />        
       </Route>
       <Route path='/scholar'  element={<div> <AdminLayout user={'scholar'} > <Outlet /> </AdminLayout></div> } >
         <Route path='/scholar'  element={<AdminDashboard />} />

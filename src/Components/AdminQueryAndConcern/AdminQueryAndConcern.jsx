@@ -124,8 +124,8 @@ const AdminQueryAndConcern = () => {
 
                     <tbody>
                         {dataList.length > 0 ? 
-                            dataList.map(({i, queryData}) => (
-                                <tr>
+                            dataList.map((queryData, index) => (
+                                <tr key={index}>
                                     <td className='py-3'>
                                         {queryData.scholar}
                                     </td>
@@ -140,9 +140,15 @@ const AdminQueryAndConcern = () => {
                                 </tr>
                             ))
                             :
-                                (<div className='empty-list'>
-                                    No Queries can be found!
-                                </div>
+                                (
+                                <tr>
+                                    <td>
+                                        <div className='empty-list'>
+                                            No Queries can be found!
+                                        </div>
+                                    </td>
+                                </tr>
+                                
                                 )
                          }  
                     </tbody>

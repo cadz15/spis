@@ -1,8 +1,11 @@
 import React from 'react';
 import { RiHome3Line } from 'react-icons/ri';
 import DocumentSubmitted from '../Components/DocumentSubmitted/DocumentSubmitted';
+import useTitle from '../Utils/useTitle';
 
 const AdminDocument = () => {
+    useTitle('Scholar documents'); // PAGE TITLE
+    
   return (
     <div className='main-content-bg'>
         <div className='main-content p-4'>

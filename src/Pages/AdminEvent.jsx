@@ -3,12 +3,15 @@ import { RiHome3Line } from 'react-icons/ri';
 import EventEditModal from '../Components/EventEditModal/EventEditModal';
 import EventForm from '../Components/EventForm/EventForm';
 import EventList from '../Components/EventList/EventList';
+import useTitle from '../Utils/useTitle';
 
 const AdminEvent = () => {
     const [selectedId, setSelectedId] = useState(0);
     const [showModal, setShowModal] = useState(false);
     const [eventsList, setEventsList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+
+    useTitle('Events'); // PAGE TITLE
 
     const  fetchData = () => {
         // setIsLoading(true);

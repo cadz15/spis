@@ -5,8 +5,12 @@
     height: 60px;
     color: #fff;
     overflow: hidden;
+    
 }
 
+.transparent {
+    color: rgba(255, 255, 255, 0);
+}
 
 .logo {
     width: 230px;
@@ -35,19 +39,17 @@
 @media (max-width: 576px) { 
     .header {
         justify-content: space-between;
+        width: 100%;
     }
 
     .logo {
         order: 1;
         width: 50%;
+        margin-left: 15px;
     }
 
     .header-logout {
         order: 2;
         padding-right: 10px;
-    }
-
-    .menu-toggle {
-        order: 0;
     }
 }

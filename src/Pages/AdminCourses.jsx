@@ -3,10 +3,13 @@ import { RiHome3Line } from 'react-icons/ri';
 import CourseForm from '../Components/CourseForm/CourseForm';
 import CourseList from '../Components/CourseList/CourseList';
 import CoursesEditModal from '../Components/CoursesEditModal/CoursesEditModal';
+import useTitle from '../Utils/useTitle';
 
 const AdminCourses = () => {
     const [selectedId, setSelectedId] = useState(0);
     const [showModal, setShowModal] = useState(false);
+
+    useTitle('Admin course master list'); // PAGE TITLE
 
     const handleShowModal = (e) => {
         if(e.currentTarget === e.target) setShowModal(current => !current);

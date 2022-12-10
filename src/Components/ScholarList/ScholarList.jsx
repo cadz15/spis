@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import useAuthStore from '../../Store/globalStates';
 import './ScholarList.css';
 
@@ -8,18 +9,11 @@ const ScholarList = () => {
     const [scholarshipList, setScholarshipList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const { jwt_token } = useAuthStore();
+    const navigate = useNavigate();
 
     const  fetchData = async (scholarName='', scholarship='') => {
         setIsLoading(true);
-
-        // fetch('http://slsu_spis.localtest/api/scholars', {headers: {'Authorization': `Bearer ${jwt_token}`}})
-        // .then((response) => {
-        //     console.log(response);
-        // }).catch((error) => {
-        //     console.log(error)
-        // })
-
-        await axios.get('http://slsu_spis.localtest/api/scholars',{headers: {
+        await axios.get(`${process.env.REACT_APP_API_LINK}/scholars`,{headers: {
                 "Authorization" : `Bearer ${jwt_token}`,
                 'withCredentials': 'true'
                 }
@@ -30,8 +24,8 @@ const ScholarList = () => {
                 // console.log(response.data);
             })
             .catch((error) => {
-                console.log(error);
-                console.log(jwt_token);
+                // console.log(error);
+                // console.log(jwt_token);
             })
             
         setIsLoading(false);
@@ -51,22 +45,7 @@ const ScholarList = () => {
             {
                 scholarship: 'CHED (Commision on Higher Education)'
             },
-        ])
-        
-        // await axios.get('http://slsu_spis.localtest/api/scholarship',{headers: {
-        //         "Authorization" : `Bearer ${jwt_token}`,
-        //         'withCredentials': 'true'
-        //         }
-        //         }
-        //     )
-        //     .then((response) => {
-        //         setScholarshipList(response.data);
-        //         // console.log(response.data);
-        //     })
-        //     .catch((error) => {
-        //         console.log(error);
-        //         console.log(jwt_token);
-        //     })
+        ]);
     }
 
     const handleSearchButton = () => {
@@ -96,7 +75,7 @@ const ScholarList = () => {
                                 <select className="form-select" id='floatingScholarship'>
                                     <option value="0">All</option>
                                     {scholarshipList.length > 0 ? scholarshipList.map((scholarshipListData) => 
-                                        (<option value={scholarshipListData.scholarship}>{scholarshipListData.scholarship}</option>)
+                                        (<option key={scholarshipListData.scholarship} value={scholarshipListData.scholarship}>{scholarshipListData.scholarship}</option>)
                                         ) 
                                         : 
                                         ''
@@ -141,7 +120,7 @@ const ScholarList = () => {
                     <tbody>
                         {dataResponse?.length > 0 ? 
                             dataResponse[0].data.map((scholarData) => (
-                            <tr>
+                            <tr className='cursor-pointer' key={scholarData.id_number} tabIndex={scholarData.id_number} onClick={() => navigate(`/admin/profiles/${scholarData.id_number}`)}>
                                 <td className='py-3'>
                                         {`${scholarData.first_name} ${scholarData.last_name}`}
                                 </td>
@@ -157,9 +136,14 @@ const ScholarList = () => {
                             </tr>
                             ))
                             : 
-                            (<div className='empty-list'>
-                                No Scholar can be found!
-                            </div>
+                            (
+                            <tr>
+                                <td>
+                                    <div className='empty-list'>
+                                        No Scholar can be found!
+                                    </div>
+                                </td>
+                            </tr>
                             )
                         }
                     </tbody>

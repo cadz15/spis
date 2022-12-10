@@ -1,8 +1,11 @@
 import React from 'react';
 import { RiHome3Line } from 'react-icons/ri';
 import AdminQueryAndConcern from '../Components/AdminQueryAndConcern/AdminQueryAndConcern';
+import useTitle from '../Utils/useTitle';
 
 const AdminQuery = () => {
+    useTitle('Query and Concern'); // PAGE TITLE
+
   return (
     <div className='main-content-bg'>
         <div className='main-content p-4'>

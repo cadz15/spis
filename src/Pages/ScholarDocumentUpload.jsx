@@ -2,8 +2,11 @@ import React from 'react';
 import { RiHome3Line } from 'react-icons/ri';
 import DocumentCard from '../Components/DocumentCard/DocumentCard';
 import UploadDocument from '../Components/UploadDocument/UploadDocument';
+import useTitle from '../Utils/useTitle';
 
 const ScholarDocumentUpload = () => {
+    useTitle('Scholar Upload Document'); // PAGE TITLE
+
   return (
     <div className='main-content-bg'>
         <div className='main-content p-4'>

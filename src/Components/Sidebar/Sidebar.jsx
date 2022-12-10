@@ -3,43 +3,54 @@ import { SiGooglescholar, SiCoursera } from 'react-icons/si';
 import { AiFillCaretDown } from 'react-icons/ai';
 import { CgProfile } from 'react-icons/cg';
 import { MdOutlineLogout, MdEventNote, MdOutlinePersonAddAlt } from 'react-icons/md';
-import { RiHome3Line, RiQuestionnaireLine }  from 'react-icons/ri';
+import { RiHome3Line, RiMenu2Line, RiQuestionnaireLine }  from 'react-icons/ri';
 import { FaSms } from 'react-icons/fa';
 import { BsPersonLinesFill } from 'react-icons/bs';
 import { IoDocumentAttachOutline } from 'react-icons/io5';
 import './style.css';
 import { Link, NavLink } from 'react-router-dom';
 import useAuthStore from '../../Store/globalStates';
+import axios from 'axios';
 
 
 
 const Sidebar = (props) => {
+	const [miniSidebar, setMiniSidebar] = useState(false);
 	const { userAuth } = useAuthStore();
 	const [showUserDetail, setShowUserDetail] = useState(false);
-	const sidebarClassList = document.getElementById('sidebar-menu')?.classList;
+	const [menuClassList, setMenuClassList] = useState(null)
+	let sidebarClassList = document.getElementById('sidebar-menu')?.classList;
 
 	const handleUserDropDown = () => {
 		setShowUserDetail(current => !current);
 	};
-
-	const handleUserDropDownHover = () => {
-		if(props.isMini){
-			setShowUserDetail(!props.isMini)
+	
+	const handleMenuToggle = () => {
+		if (miniSidebar ){
+		  setMiniSidebar(false);
+		  sidebarClassList?.remove('mini-navbar');
+		}else {
+		  setMiniSidebar(true);
+		  setShowUserDetail(false);
+		  sidebarClassList?.add('mini-navbar');
 		}
-		props.handleHoverMenuToggle();
-	};
+	}
 	
 	useEffect(() => {
-		sidebarClassList?.toggle('mini-navbar');
-	},[sidebarClassList])
+		setMenuClassList(document.getElementById('sidebar-menu')?.classList);
+	},[menuClassList])
+
   return (
-    <nav id='sidebar-menu' className={`pcoded-navbar menu-light border-top border-end ${props.miniNavbar}`} onMouseEnter={(e) => {  handleUserDropDownHover() }}  onMouseLeave={() => { handleUserDropDownHover() }}>
+    <nav id='sidebar-menu' className={`pcoded-navbar menu-light border-top border-end `} >
+		<div className='hamburger'>        	
+        	<RiMenu2Line className='menu-toggle' onClick={handleMenuToggle} />
+		</div>
 		<div className="navbar-wrapper  ">
 			<div className="navbar-content scroll-div " >
 				
 				<div className="account-detail-container">
 					<div className="main-menu-header">
-						<img className="avatar" src="https://cdn-icons-png.flaticon.com/512/3048/3048127.png" alt="User-Profile-Image" />
+						<img className="avatar" src="https://cdn-icons-png.flaticon.com/512/3048/3048127.png" alt="User-Profile" />
 						<div className="user-details" onClick={handleUserDropDown}>
 							<div id="more-details">{`${userAuth.first_name} ${userAuth.last_name}`} <AiFillCaretDown /></div>
 						</div>

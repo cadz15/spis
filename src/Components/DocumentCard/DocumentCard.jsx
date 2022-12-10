@@ -59,8 +59,8 @@ const DocumentCard = () => {
 
                 <tbody>
                 {dataList.length > 0 ?  
-                     dataList.map(({i, documentData}) => (
-                        <tr >
+                     dataList.map((documentData, index) => (
+                        <tr key={index} >
                             <th scope="row">{documentData.scholarName}</th>
                             <td>{documentData.scholarship}</td>
                             <td>{documentData.documentName}</td>
@@ -68,9 +68,15 @@ const DocumentCard = () => {
                         </tr>
                      ))
                      :
-                     (<div className='empty-list'>
-                         No Document!
-                     </div>)
+                     (
+                    <tr>
+                        <td>
+                            <div className='empty-list'>
+                                No Document!
+                            </div>
+                        </td>
+                    </tr>
+                     )
                 }   
                     
                 </tbody>

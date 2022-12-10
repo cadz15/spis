@@ -1,8 +1,11 @@
 import React from 'react';
 import { RiHome3Line } from 'react-icons/ri';
 import SMSBlastForm from '../Components/SMSBlastForm/SMSBlastForm';
+import useTitle from '../Utils/useTitle';
 
 const AdminSMSBlast = () => {
+    useTitle('SMS Blast'); // PAGE TITLE
+
   return (
     <div className='main-content-bg'>
         <div className='main-content p-4'>

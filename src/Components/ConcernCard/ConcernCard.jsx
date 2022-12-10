@@ -48,8 +48,8 @@ const ConcernCard = () => {
             <table className="table table-hover document-card-table">
                 <tbody>
                     {dataList.length > 0 ? 
-                        dataList.map(({i, concernData}) => (
-                            <tr>
+                        dataList.map((concernData, index) => (
+                            <tr key={index}>
                                 <td>
                                 <img className="avatar" src="https://cdn-icons-png.flaticon.com/512/3048/3048127.png" alt="User-Profile-Image" />
                                 </td>
@@ -64,9 +64,15 @@ const ConcernCard = () => {
                             </tr>
                          ))
                          : 
-                         (<div className='empty-list'>
-                            No Query And Concern!
-                            </div>)
+                         (
+                         <tr>
+                            <td>
+                                <div className='empty-list'>
+                                    No Query And Concern!
+                                </div>
+                            </td>
+                         </tr>
+                         )
                     }
                 </tbody>
             </table>

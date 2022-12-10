@@ -5,10 +5,12 @@ import ProfileDetails from '../Components/ProfileDetails/ProfileDetails';
 import EventList from '../Components/EventList/EventList';
 import DocumentCard from '../Components/DocumentCard/DocumentCard';
 import useAuthStore from '../Store/globalStates';
+import useTitle from '../Utils/useTitle';
 
 
 const Profile = () => {
     const { userAuth } = useAuthStore();
+    useTitle('Profile'); // PAGE TITLE
 
   return (
     <div className='main-content-bg'>
