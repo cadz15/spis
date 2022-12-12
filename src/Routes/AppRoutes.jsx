@@ -14,7 +14,9 @@ import Landing from '../Pages/Landing/Landing';
 import ListScholar from '../Pages/ListScholar';
 import Profile from '../Pages/Profile';
 import RegisterScholar from '../Pages/RegisterScholar';
+import ScholarDashboard from '../Pages/ScholarDashboard';
 import ScholarDocumentUpload from '../Pages/ScholarDocumentUpload';
+import ScholarEvent from '../Pages/ScholarEvent';
 import ScholarProfile from '../Pages/ScholarProfile';
 
 const AppRoutes = () => {
@@ -35,9 +37,9 @@ const AppRoutes = () => {
         <Route path='profiles/:id'  element={<ScholarProfile />} />        
       </Route>
       <Route path='/scholar'  element={<div> <AdminLayout user={'scholar'} > <Outlet /> </AdminLayout></div> } >
-        <Route path='/scholar'  element={<AdminDashboard />} />
-        <Route path='dashboard'  element={<AdminDashboard />} />
-        <Route path='event'  element={<AdminEvent />} />
+        <Route path='/scholar'  element={<ScholarDashboard />} />
+        <Route path='dashboard'  element={<ScholarDashboard />} />
+        <Route path='event'  element={<ScholarEvent />} />
         <Route path='scholardocument'  element={<ScholarDocumentUpload />} />
         <Route path='query'  element={<AdminQuery />} />
         <Route path='profiles'  element={<Profile />} />

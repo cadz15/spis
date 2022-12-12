@@ -3,6 +3,8 @@ import useTitle from '../../Utils/useTitle';
 
 const ForgotPassword = () => {
     useTitle('Forgot password'); // PAGE TITLE
+
+    
     
   return (
     <div className="main-banner">
@@ -15,8 +17,8 @@ const ForgotPassword = () => {
                                 <img src="https://cdn-icons-png.flaticon.com/512/6195/6195699.png" alt="" className="login-icon mb-4" />
                                 <h4 className="mb-3 f-w-400">Forgot Password</h4>
                                 <div className=" form-floating mb-3">
-                                    <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
-                                    <label htmlFor="floatingInput">Email address</label>
+                                    <input type="text" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                                    <label htmlFor="floatingInput">Scholar ID Number</label>
                                 </div>
                                 <button className="btn btn-block btn-primary p-2 px-3">Reset Password</button>
                             </div>

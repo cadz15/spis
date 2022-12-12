@@ -11,13 +11,28 @@ import './Main.css';
 const Main = () => {
     const [dataList, setDataList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [eventsList, setEventsList] = useState([]);
     const { jwt_token } = useAuthStore();
 
-    // axios.post(`apiLink`, {}, {headers: {Authorization: "Bearer " + jwt_token}})
-    // .then((response) => {
-    //     setDataList(response.data);
-    // });
-  
+    const  fetchData = () => {
+        setIsLoading(true);
+        axios.get(`${process.env.REACT_APP_API_LINK}/events`, 
+        { headers: {
+            "Authorization" : `Bearer ${jwt_token}`,
+            'Accept' : 'application/json',
+            'Content-Type': 'application/json',
+            'withCredentials': 'true'
+            }
+        }
+        )
+        .then((response) => {
+            setEventsList(response.data);
+            setIsLoading(false);
+        })
+        .catch((error) => console.log(error));
+    }
+
+
 
     useEffect(() => {
         setDataList([
@@ -43,6 +58,9 @@ const Main = () => {
             scholarshipTotal: 200
         },
     ]);
+
+    
+    fetchData();
     }, []);
 
 
@@ -71,7 +89,7 @@ const Main = () => {
 
                 <div className='row'>
                     <div className='mx-1 my-3'>
-                        <EventList />
+                        <EventList data={eventsList} isLoading={isLoading} />
                     </div>
                 </div>
 

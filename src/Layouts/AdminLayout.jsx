@@ -4,6 +4,8 @@ import Header from '../Components/Header/Header';
 import Sidebar from '../Components/Sidebar/Sidebar';
 import useAuthStore from '../Store/globalStates';
 import AuthGuard from '../Utils/AuthGuard';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AdminLayout = ({children, user}) => {
   const { jwt_token, removeUser } = useAuthStore();
@@ -23,6 +25,7 @@ const AdminLayout = ({children, user}) => {
   return (
     <AuthGuard user={user}>
       <div className='admin-layout'>
+        <ToastContainer />
         <Header  />
         <div className='content'>
             <div className='sidebar'>

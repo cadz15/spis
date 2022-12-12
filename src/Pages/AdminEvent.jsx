@@ -1,74 +1,81 @@
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { RiHome3Line } from 'react-icons/ri';
 import EventEditModal from '../Components/EventEditModal/EventEditModal';
 import EventForm from '../Components/EventForm/EventForm';
 import EventList from '../Components/EventList/EventList';
+import useAuthStore from '../Store/globalStates';
 import useTitle from '../Utils/useTitle';
 
 const AdminEvent = () => {
     const [selectedId, setSelectedId] = useState(0);
+    const [refreshList, setRefreshList] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [eventsList, setEventsList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [recipientList, setRecipientList] = useState([]);
+    const { jwt_token } = useAuthStore();
 
     useTitle('Events'); // PAGE TITLE
 
     const  fetchData = () => {
-        // setIsLoading(true);
+        setIsLoading(true);
+        axios.get(`${process.env.REACT_APP_API_LINK}/events`, 
+        { headers: {
+            "Authorization" : `Bearer ${jwt_token}`,
+            'Accept' : 'application/json',
+            'Content-Type': 'application/json',
+            'withCredentials': 'true'
+            }
+        }
+        )
+        .then((response) => {
+            setEventsList(response.data);
+            setIsLoading(false);
+        })
+        .catch((error) => console.log(error));
+    }
 
-       // await axios.get('http://slsu_spis.localtest/api/events',{headers: {
-        //         "Authorization" : `Bearer ${jwt_token}`,
-        //         'withCredentials': 'true'
-        //         }
-        //         }
-        //     )
-        //     .then((response) => {
-        //         setDataList(response.data);
-        //         // console.log(response.data);
-        //     })
-        //     .catch((error) => {
-        //         console.log(error);
-        //         console.log(jwt_token);
-        //     })
-
-        setEventsList([
-            {
-                id: 0,
-                event: 'This is dummy event #1',
-                event_date: '10/12/2022',
-                event_detail: 'This is sample Event details. Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste assumenda pariatur recusandae libero ipsa amet aliquid ea excepturi nisi sunt, sit impedit incidunt vitae quod placeat praesentium reiciendis. Ipsa, sapiente.' 
-            },
-            {
-                id: 1,
-                event: 'This is dummy event #2',
-                event_date: '10/12/2022',
-                event_detail: 'This is sample Event details. Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste assumenda pariatur recusandae libero ipsa amet aliquid ea excepturi nisi sunt, sit impedit incidunt vitae quod placeat praesentium reiciendis. Ipsa, sapiente.' 
-            },
-            {
-                id: 2,
-                event: 'This is dummy event #3',
-                event_date: '10/12/2022',
-                event_detail: 'This is sample Event details. Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste assumenda pariatur recusandae libero ipsa amet aliquid ea excepturi nisi sunt, sit impedit incidunt vitae quod placeat praesentium reiciendis. Ipsa, sapiente.' 
-            },
-        ])
+    const getRecipientList = () => {
+        axios.get(`${process.env.REACT_APP_API_LINK}/scholars/recipient`, 
+        {headers: {
+            "Authorization" : `Bearer ${jwt_token}`,
+            'Accept' : 'application/json',
+            'Content-Type': 'application/json',
+            'withCredentials': 'true'
+            }
+            }
+        )
+        .then((response) => {
+            setRecipientList(response.data);
+        })
+        .catch((error) => console.log(error));
     }
 
     const handleShowModal = (e) => {
-        if(e.currentTarget === e.target) setShowModal(current => !current);
+        if(e.currentTarget === e.target) {
+            setShowModal(current => !current)
+        };
     }
 
     const handleListSelect = (e) => {
+        setSelectedId(eventsList.filter((event) => event.id === e.currentTarget.tabIndex));
         setShowModal(current => !current);
-        setSelectedId(e.currentTarget.tabIndex);
+    }
+
+    const closeModalUpdate = () => {
+        setShowModal(false);
     }
 
     useEffect(() => {
-        fetchData()
-    }, [])
+        fetchData();
+        getRecipientList()
+        setRefreshList(false);
+    }, [refreshList])
 
   return (
     <>
-        <EventEditModal show={showModal} onClose={handleShowModal} data={selectedId} />
+        <EventEditModal show={showModal} onClose={handleShowModal} refreshList={setRefreshList} recipientList={recipientList} data={selectedId} closeModalUpdate={closeModalUpdate} />
         <div className='main-content-bg'>
             <div className='main-content p-4'>
                 <div className='breacrumb-container mb-4'>

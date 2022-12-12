@@ -1,10 +1,19 @@
 import Multiselect from 'multiselect-react-dropdown';
-import React from 'react';
+import React, { useState } from 'react';
 
-const SMSBlastForm = () => {
-    const data =  [
-        {scholarship: 'adidas' ,name: 'Option 1️⃣', id: 1},{scholarship: 'nike' ,name: 'Option 2️⃣', id: 2}
-    ];
+const SMSBlastForm = (props) => {
+    const [selectedRecipient, setSelectedRecipient] = useState([]);
+    
+
+    const handleMultiselectSelect = (selectedList, selectedItem) => {
+        setSelectedRecipient((current) => [...current, selectedItem.id]);
+    }
+
+    const handleMultiselectRemove = (selectedList, removedItem) => {
+        setSelectedRecipient((current) => current.filter((recipient) => recipient !== removedItem.id));
+    }
+
+
 
   return (
     <div className="card latest-update-card p-0">
@@ -21,12 +30,14 @@ const SMSBlastForm = () => {
                 </div>
                 <div className='row mb-3'>
                     <Multiselect
-                        options={data} // Options to display in the dropdown
-                        groupBy='scholarship'
-                        displayValue="name" // Property name to display in the dropdown options
-                        showCheckbox
-                        placeholder='Select Recipient'
-                    />
+                            options={props.recipientList} // Options to display in the dropdown
+                            groupBy='scholarship_name'
+                            displayValue="display_name" // Property name to display in the dropdown options
+                            showCheckbox
+                            placeholder='Select Recipient'
+                            onSelect={handleMultiselectSelect}
+                            onRemove={handleMultiselectRemove}
+                        />
                 </div>
                 <div className='row'>
                     <div className="form-floating mb-3">

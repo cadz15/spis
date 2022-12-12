@@ -2,6 +2,13 @@ import React from 'react';
 
 const ScholarshipEditModal = (props) => {
 
+    const handleUpdateForm = () => {        
+        const scholarship_name = document.getElementById('floatingScholarshipName').value;
+        const scholarship_detail = document.getElementById('floatingScholarshipDetails').value;
+
+        props.handleUpdate(scholarship_name, scholarship_detail);
+    }
+
     if (!props.show) return null;
 
   return (
@@ -15,20 +22,20 @@ const ScholarshipEditModal = (props) => {
             <div className="modal-body">
                 <div className='editForm'>
                     <div className="form-floating mb-3">
-                        <input type="text" className="form-control" id="floatingScholarshipName" placeholder="Scholaship Name" defaultValue={props.data?.scholarshipName} />
+                        <input type="text" className="form-control" id="floatingScholarshipName" placeholder="Scholaship Name" defaultValue={props.data?.scholarship_name} />
                         <label htmlFor="floatingScholarshipName">Scholarship Name</label>
                     </div>
                     <div className="form-floating mb-3">
-                        <input type="text" className="form-control" id="floatingScholarshipDetails" placeholder="Scholarship Details" defaultValue={props.data?.scholarshipDetail} />
+                        <input type="text" className="form-control" id="floatingScholarshipDetails" placeholder="Scholarship Details" defaultValue={props.data?.scholarship_detail} />
                         <label htmlFor="floatingScholarshipDetails">Scholarship Details</label>
                     </div>
                 </div>  
             </div>
             <div className="modal-footer d-flex justify-content-between">
                 <button type="button" className="btn btn-secondary" onClick={props.onClose}>Close</button>
-                <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-danger">Delete</button>
-                    <button type="button" class="btn btn-success">Update</button>
+                <div className="btn-group" role="group">
+                    {/* <button type="button" className="btn btn-danger">Delete</button> */}
+                    <button type="button" className="btn btn-success" onClick={handleUpdateForm} >Update</button>
                 </div>
             </div>
             </div>

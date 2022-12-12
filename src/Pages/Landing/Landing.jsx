@@ -7,10 +7,26 @@ import useTitle from '../../Utils/useTitle';
 
 const Landing = () => {
     const [error, setError] = useState(null);
-    const { userAuth, addUser, setToken } = useAuthStore();
+    const { userAuth, addUser, setToken, jwt_token, setScholarships } = useAuthStore();
     const navigate = useNavigate();
 
     useTitle('Welcome to SPIS'); // PAGE TITLE
+
+
+    const hanldeGetScholarship = async () => {
+        await axios.get(`${process.env.REACT_APP_API_LINK}/scholarship`, { headers: {
+            "Authorization" : `Bearer ${jwt_token}`,
+            'withCredentials': 'true'
+            }
+            }
+        )
+        .then((response) => {
+            setScholarships(response.data)
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+    }
 
     const handleLogin = async () => {
         const username = document.getElementById('floatingUsername').value;
@@ -32,7 +48,8 @@ const Landing = () => {
     }
 
     useEffect(() => {
-        setError(null);
+        setError(null);        
+        hanldeGetScholarship()
         if(userAuth?.account_type === 1){
             navigate('/admin/dashboard/');
         }else if(userAuth?.account_type === 2) {

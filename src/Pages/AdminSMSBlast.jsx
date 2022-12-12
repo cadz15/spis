@@ -1,10 +1,35 @@
-import React from 'react';
+import axios from 'axios';
+import React, { useState } from 'react';
+import { useEffect } from 'react';
 import { RiHome3Line } from 'react-icons/ri';
 import SMSBlastForm from '../Components/SMSBlastForm/SMSBlastForm';
+import useAuthStore from '../Store/globalStates';
 import useTitle from '../Utils/useTitle';
 
 const AdminSMSBlast = () => {
     useTitle('SMS Blast'); // PAGE TITLE
+    const [recipientList, setRecipientList] = useState([]);
+    const { jwt_token } = useAuthStore();
+
+    const getRecipientList = () => {
+        axios.get(`${process.env.REACT_APP_API_LINK}/scholars/recipient`, 
+        {headers: {
+            "Authorization" : `Bearer ${jwt_token}`,
+            'Accept' : 'application/json',
+            'Content-Type': 'application/json',
+            'withCredentials': 'true'
+            }
+            }
+        )
+        .then((response) => {
+            setRecipientList(response.data);
+        })
+        .catch((error) => console.log(error));
+    }
+
+    useEffect(() => {
+        getRecipientList();
+    },[]);
 
   return (
     <div className='main-content-bg'>
@@ -17,7 +42,7 @@ const AdminSMSBlast = () => {
             </div>
 
             <div className='row'>
-                <SMSBlastForm />            
+                <SMSBlastForm recipientList={recipientList} />            
             </div>
         </div>
     </div>

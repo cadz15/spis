@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import useAuthStore from '../../Store/globalStates';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const RegisterScholarForm = () => {
     const [hideError, setHideError] = useState(true);
@@ -23,7 +24,7 @@ const RegisterScholarForm = () => {
         const phone_number = document.getElementById('floatingPhone').value;
         const major = document.getElementById('floatingMajor').value;
 
-        axios.post('http://slsu_spis.localtest/api/scholars', 
+        axios.post(`${process.env.REACT_APP_API_LINK}/scholars`, 
         {first_name, last_name, id_number, course, department, scholarship, year_level, email, phone_number, major, token: jwt_token}, 
         {headers: {
             "Authorization" : `Bearer ${jwt_token}`,
@@ -39,8 +40,11 @@ const RegisterScholarForm = () => {
                 setHideError(false);
             }else {
                 setHideError(true);
-                setHasError({})
-                navigate('/admin/list');
+                setHasError({});
+                toast.success('Scholar registered successfully!', {
+                    position: toast.POSITION.TOP_RIGHT,
+                    onClose: () => {navigate('/admin/list');}
+                });
             }
         })
         .catch((error) => {
@@ -60,7 +64,7 @@ const RegisterScholarForm = () => {
         </div>
         <div className="card-body p-3 ">
             <div>
-                <div class={`alert alert-danger alert-dismissible fade show ${hideError? 'd-none': ''} `} role="alert">
+                <div className={`alert alert-danger alert-dismissible fade show ${hideError? 'd-none': ''} `} role="alert">
                     {hasError && 
                         Object.entries(hasError).map((errorValidation) => (
                         <p key={errorValidation[0]}><strong>{errorValidation[0]}</strong> {errorValidation[1]} </p>

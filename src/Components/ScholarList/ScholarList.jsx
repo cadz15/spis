@@ -6,15 +6,17 @@ import './ScholarList.css';
 
 const ScholarList = () => {
     const [dataResponse, setDataResponse] = useState([]);
-    const [scholarshipList, setScholarshipList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    const { jwt_token } = useAuthStore();
+    const { jwt_token, scholarshipData } = useAuthStore();
     const navigate = useNavigate();
 
-    const  fetchData = async (scholarName='', scholarship='') => {
+    const  fetchData = async (scholarName='', scholarship=0) => {
         setIsLoading(true);
-        await axios.get(`${process.env.REACT_APP_API_LINK}/scholars`,{headers: {
+        await axios.get(`${process.env.REACT_APP_API_LINK}/scholars?scholarName=${scholarName}&scholarship=${scholarship}`,
+            {headers: {
                 "Authorization" : `Bearer ${jwt_token}`,
+                'Accept' : 'application/json',
+                'Content-Type': 'application/json',
                 'withCredentials': 'true'
                 }
                 }
@@ -30,31 +32,15 @@ const ScholarList = () => {
             
         setIsLoading(false);
     }
-
-    const fetchScholarship = async () => {
-        setScholarshipList([
-            {
-                scholarship: 'DOST-SEI (Department of Science and Technology - Science Education Institute)'
-            },
-            {
-                scholarship: 'TES (Tertiary Education Subsidy)'
-            },
-            {
-                scholarship: 'FHE (Free Higher Education)'
-            },
-            {
-                scholarship: 'CHED (Commision on Higher Education)'
-            },
-        ]);
-    }
-
     const handleSearchButton = () => {
-        //fetchData()
+        const scholar_name = document.getElementById('floatingSearchBox').value;
+        const scholarship_id = document.getElementById('floatingScholarship').value;
+        
+        fetchData(scholar_name, scholarship_id);
     }
 
     useEffect(() => {
        fetchData()
-       fetchScholarship()
     }, [])
 
 
@@ -74,8 +60,8 @@ const ScholarList = () => {
                             <div className="form-floating mb-3">
                                 <select className="form-select" id='floatingScholarship'>
                                     <option value="0">All</option>
-                                    {scholarshipList.length > 0 ? scholarshipList.map((scholarshipListData) => 
-                                        (<option key={scholarshipListData.scholarship} value={scholarshipListData.scholarship}>{scholarshipListData.scholarship}</option>)
+                                    {scholarshipData.length > 0 ? scholarshipData.map((scholarshipListData) => 
+                                        (<option key={scholarshipListData.id} value={scholarshipListData.id}>{scholarshipListData.scholarship_name}</option>)
                                         ) 
                                         : 
                                         ''
@@ -98,7 +84,7 @@ const ScholarList = () => {
                 <div className={`event-list-table-container ${isLoading? 'list-loading':''}`}>
                     
                 <table className="table table-hover event-list-table">
-                    {dataResponse?.length > 0 && 
+                    {(dataResponse?.length > 0 && dataResponse[0].data.length > 0) && 
                         (<thead>
                             <tr>
                                 <th className='py-3'>
@@ -110,15 +96,12 @@ const ScholarList = () => {
                                 <th className='py-3'>
                                     Scholarship
                                 </th>
-                                <th className='py-3'>
-                                    Status
-                                </th>
                             </tr>
                         </thead>)
                     }
                     
                     <tbody>
-                        {dataResponse?.length > 0 ? 
+                        {(dataResponse?.length > 0 && dataResponse[0].data.length > 0) ? 
                             dataResponse[0].data.map((scholarData) => (
                             <tr className='cursor-pointer' key={scholarData.id_number} tabIndex={scholarData.id_number} onClick={() => navigate(`/admin/profiles/${scholarData.id_number}`)}>
                                 <td className='py-3'>
@@ -129,9 +112,6 @@ const ScholarList = () => {
                                 </td>
                                 <td className='py-3'>
                                     {scholarData.scholarship_name}
-                                </td>
-                                <td className='py-3'>
-                                    {/* <p className={`${scholarData.scholarStatus == 'active'? 'bg-success': 'bg-secondary'}`}>{scholarData.scholarStatus}</p> */}
                                 </td>
                             </tr>
                             ))
