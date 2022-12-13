@@ -83,7 +83,7 @@ const Landing = () => {
                                                         <div className="card-body login-body">
                                                             <img src="https://cdn-icons-png.flaticon.com/512/5526/5526478.png" alt="" className="login-icon mb-4" />
                                                             <h4 className="mb-3 f-w-400">Signin</h4>
-                                                            <div class={`alert alert-danger alert-dismissible fade show ${error == null ? 'd-none': ''} `} role="alert">
+                                                            <div className={`alert alert-danger alert-dismissible fade show ${error == null ? 'd-none': ''} `} role="alert">
                                                                 <strong>Error!</strong> {`${error}`}
                                                             </div>
                                                             <div className=" form-floating mb-3">

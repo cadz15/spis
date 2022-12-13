@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 const ScholarProfileDetails = ({id_number}) => {
     const [scholarData, setScholarData] = useState(null);
     const [showModal, setShowModal] = useState(false);
-    const { jwt_token } = useAuthStore();
+    const { jwt_token, userAuth, scholarshipData } = useAuthStore();
     const navigate = useNavigate();
 
     
@@ -164,10 +164,16 @@ const ScholarProfileDetails = ({id_number}) => {
                                     <div className=' col-md-6 col-sm-12 mb-3'>
                                         <div className="form-floating mb-3">
                                             <select className="form-select" id='floatingScholarship' required>
-                                                <option value="CHED">CHED</option>
-                                                <option value="TES">TES</option>
-                                                <option value="FHE">FHE</option>
-                                                <option value="DOST">DOST</option>
+                                                {scholarshipData.length > 0 ? scholarshipData.map((scholarshipListData) => {
+                                                        if(scholarData?.scholarship_name === scholarshipListData.scholarship_name){
+                                                            return (<option key={scholarshipListData.id} value={scholarshipListData.id} selected>{scholarshipListData.scholarship_name}</option>)
+                                                        }else{
+                                                            return (<option key={scholarshipListData.id} value={scholarshipListData.id} >{scholarshipListData.scholarship_name}</option>)
+                                                        }
+                                                    })
+                                                    :
+                                                    ''
+                                                }
                                             </select>
                                             <label htmlFor="floatingScholarship">Scholarship</label>
                                         </div>
@@ -217,9 +223,11 @@ const ScholarProfileDetails = ({id_number}) => {
                         <div className='row px-2 py-3'>
                             <button className='btn btn-primary' onClick={handleUpdateScholarProfile}>Update Scholar Detail</button>
                         </div>
-                        <div className='row px-2'>
-                            <button className='btn btn-danger' onClick={() => setShowModal(true)}>Delete Scholar</button>
-                        </div>
+                        {userAuth?.account_type === 1 && (
+                            <div className='row px-2'>
+                                <button className='btn btn-danger' onClick={() => setShowModal(true)}>Delete Scholar</button>
+                            </div>
+                        )}
 
                 
             </div>

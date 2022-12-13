@@ -1,72 +1,64 @@
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import useAuthStore from '../../Store/globalStates';
 import AdminDocumentModal from '../AdminDocumentModal/AdminDocumentModal';
 import './DocumentSubmitted.css';
 
 const DocumentSubmitted = () => {
     const [showModal, setShowModal] = useState(false);
+    const { jwt_token, scholarshipData } = useAuthStore();
     const [dataList, setDataList] = useState([]);
-    const [scholarshipList, setScholarshipList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [modalData, setModalData] = useState([]);
+    const [selectedId, setSelectedId] = useState(null);
+    const [refreshList, setRefreshList] = useState(false);
 
     const handleShowModal = (e) => {
-        if(e.currentTarget === e.target) setShowModal(current => !current);
-        setModalData(dataList[e.currentTarget.tabIndex]);
+        if(e.currentTarget === e.target) setShowModal(false);
     }
 
     const  fetchData = async (scholarName='', scholarship='') => {
         setIsLoading(true);
 
-        await fetch(`api/link`) //Change for API Link
-        
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error(
-                `This is an HTTP error: The status is ${response.status}`
-                );
-            }
-            return response.json();
-        })
-        
-        .then((actualData) => setDataList(actualData))
-        
-        .catch((err) => {
-            console.log(err.message);
-        })
-        .finally(()=> {
+        await axios.get(`${process.env.REACT_APP_API_LINK}/documents/search?scholarName=${scholarName}&scholarship=${scholarship}`,
+            {headers: {
+                "Authorization" : `Bearer ${jwt_token}`,
+                'Accept' : 'application/json',
+                'Content-Type': 'application/json',
+                'withCredentials': 'true'
+                }
+                }
+            )
+            .then((response) => {
+                setDataList(response.data.documents);
+            })
+            .catch((error) => {
+                // console.log(error);
+                // console.log(jwt_token);
+            })
             setIsLoading(false);
-        });
     }
 
-
-    const fetchScholarship = async () => {
-        await fetch(`api/link`) //Change for API Link
-        
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error(
-                `This is an HTTP error: The status is ${response.status}`
-                );
-            }
-            return response.json();
-        })
-        
-        .then((actualData) => setScholarshipList(actualData))
+    const handleListSelect = (e) => {
+        setSelectedId(dataList.filter((documentData) => documentData.id === e.currentTarget.tabIndex));
+        console.log(selectedId, e.currentTarget.tabIndex);
+        setShowModal(true);
     }
-
 
     const handleSearchButton = () => {
-        //fetchData()
+        const scholar_name = document.getElementById('floatingSearchBox').value;
+        const scholarship_id = document.getElementById('floatingScholarship').value;
+        
+        fetchData(scholar_name, scholarship_id);
     }
 
     useEffect(() => {
-       //fetchData
-       //fetchScholarship
-    }, [])
+       fetchData();
+       setRefreshList(false);
+    }, [refreshList])
     
   return (
     <div>       
-        <AdminDocumentModal show={showModal}  data={modalData} onClose={handleShowModal} />
+        <AdminDocumentModal show={showModal} refreshList={setRefreshList}  data={selectedId} forceClose={() => setShowModal(false)} onClose={handleShowModal} />
         <div className='search-container'>
             <div className='row'>
                 <div className='col-md-12 col-sm-12'>
@@ -81,10 +73,11 @@ const DocumentSubmitted = () => {
                             <div className="form-floating mb-3">
                                 <select className="form-select" id='floatingScholarship'>
                                     <option value="0">All</option>
-                                    {scholarshipList.length > 0 &&
-                                        scholarshipList.map(({i, scholarshipData}) => (
-                                            <option value={scholarshipData.id}>{scholarshipData.scholarship}</option>
-                                        ))
+                                    {scholarshipData.length > 0 ? scholarshipData.map((scholarshipListData) => 
+                                        (<option key={scholarshipListData.id} value={scholarshipListData.id}>{scholarshipListData.scholarship_name}</option>)
+                                        ) 
+                                        : 
+                                        ''
                                     }
                                 </select>
                                 <label htmlFor="floatingScholarship">Scholarship</label>
@@ -124,37 +117,26 @@ const DocumentSubmitted = () => {
                     )}
 
                     <tbody>
-                        {dataList.length > 0 ? 
-                            dataList.map((documentData, index) => (
-                                <tr key={index}>
-                                    <td className='py-3'>
-                                        {documentData.scholarName}
-                                    </td>
-                                    <td className='py-3'>
-                                        {documentData.scholarship}
-                                    </td>
-                                    <td className='py-3'>
-                                        {documentData.status}
-                                    </td>
-                                    <td className='py-3'>
-                                        <button className='btn btn-success' tabIndex={documentData.id}  onClick={handleShowModal}>
-                                            Action
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))
-                        :
-                            (
-                            <tr>
-                                <td>
-                                    <div className='empty-list'>
-                                        No Document can be found!
-                                    </div>
-                                </td>
+                        {dataList?.length > 0 ?  
+                            dataList.map((documentData) => (
+                            <tr key={documentData.id} tabIndex={documentData.id} className={`cursor-pointer`} onClick={handleListSelect} >
+                                <td >{documentData.scholars.first_name} {documentData.scholars.last_name}</td>
+                                <td>{scholarshipData.filter((scholarship_name) => scholarship_name.id === documentData.scholars.scholarship_id)[0].scholarship_name}</td>
+                                <td>{documentData.filename.substring(0, 20)}...</td>
+                                <td ><span className={`document-${documentData.document_histories[0].status}`}>{documentData.document_histories[0].status}</span></td>
                             </tr>
-                            
-                            )
-                        }  
+                        ))
+                        :
+                        (
+                        <tr>
+                            <td>
+                                <div className='empty-list'>
+                                    No Document!
+                                </div>
+                            </td>
+                        </tr>
+                        )
+                        }   
                         
                     </tbody>
                 </table>                    

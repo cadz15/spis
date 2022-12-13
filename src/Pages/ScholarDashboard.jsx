@@ -2,16 +2,22 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { RiHome3Line } from 'react-icons/ri';
-import ConcernCard from '../Components/ConcernCard/ConcernCard';
-import DocumentCard from '../Components/DocumentCard/DocumentCard';
 import EventList from '../Components/EventList/EventList';
+import ScholarQueryList from '../Components/ScholarQueryList/ScholarQueryList';
+import ScholarUploadedDocument from '../Components/ScholarUploadedDocument/ScholarUploadedDocument';
 import useAuthStore from '../Store/globalStates';
+import useTitle from '../Utils/useTitle';
 
 const ScholarDashboard = () => {
     const [isLoading, setIsLoading] = useState(false);
+    const [isLoadingConcern, setIsLoadingConcern] = useState(false);
     const [eventsList, setEventsList] = useState([]);
+    const [queryList, setQueryList] = useState([]);
+    const [documentList, setDocumentList] = useState(null);
+    const [isDocumentLoading, setIsDocumentLoading] = useState(false);
     const { jwt_token, userAuth } = useAuthStore();
 
+    useTitle(`Dashboard | ${userAuth.first_name} ${userAuth.last_name}`); // PAGE TITLE
 
     const  fetchData = () => {
         setIsLoading(true);
@@ -33,8 +39,50 @@ const ScholarDashboard = () => {
         .catch((error) => console.log(error));
     }
 
+
+    const fetchConcern = () => {
+        setIsLoadingConcern(true);
+        axios.get(`${process.env.REACT_APP_API_LINK}/concern/scholar/${userAuth.id}`, 
+        { headers: {
+            "Authorization" : `Bearer ${jwt_token}`,
+            'Accept' : 'application/json',
+            'Content-Type': 'application/json',
+            'withCredentials': 'true'
+            }
+        }
+        )
+        .then((response) => {
+            console.log(response.data);
+            setQueryList(response.data);
+            setIsLoadingConcern(false);
+        })
+        .catch((error) => console.log(error));
+    }
+
+
+    const  fetchDocumentData = () => {
+        setIsDocumentLoading(true);
+        axios.get(`${process.env.REACT_APP_API_LINK}/documents?id_number=${userAuth.id_number}`, 
+        { headers: {
+            "Authorization" : `Bearer ${jwt_token}`,
+            'Accept' : 'application/json',
+            'Content-Type': 'application/json',
+            'withCredentials': 'true'
+            }
+        }
+        )
+        .then((response) => {
+            console.log(response);
+            setDocumentList(response.data.documents);
+            setIsDocumentLoading(false);
+        })
+        .catch((error) => console.log(error));
+    }
+
     useEffect(() => {
         fetchData();
+        fetchDocumentData();
+        fetchConcern()
     },[]);
 
   return (
@@ -60,10 +108,10 @@ const ScholarDashboard = () => {
                     <div className='col-md-12 col-lg-12'>
                         <div className='row'>
                             <div className='col-sm-12 col-lg-6 col-md-12 mb-3'>
-                                <DocumentCard />
+                                <ScholarUploadedDocument handleListSelect={() => null} isLoading={isDocumentLoading} data={documentList} />
                             </div>
                             <div className='col-sm-12  col-lg-6 col-md-12 mb-3'>
-                                <ConcernCard />
+                                <ScholarQueryList handleListSelect={() => null} isLoading={isLoadingConcern} data={queryList} />
                             </div>
 
                         </div>

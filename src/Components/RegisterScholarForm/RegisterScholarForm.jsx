@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 
 const RegisterScholarForm = () => {
     const [hideError, setHideError] = useState(true);
-    const { jwt_token } = useAuthStore();
+    const { jwt_token, scholarshipData } = useAuthStore();
     const navigate = useNavigate();
     const [hasError, setHasError] = useState({})
 
@@ -32,7 +32,7 @@ const RegisterScholarForm = () => {
             'Content-Type': 'application/json',
             'withCredentials': 'true'
             }
-            }
+        }
         )
         .then((response) => {
             if(response.data.errors){
@@ -122,10 +122,12 @@ const RegisterScholarForm = () => {
                             <div className=' col-md-6 col-sm-12 mb-3'>
                                 <div className="form-floating mb-3">
                                     <select className="form-select" id='floatingScholarship' required>
-                                        <option value="CHED">CHED</option>
-                                        <option value="TES">TES</option>
-                                        <option value="FHE">FHE</option>
-                                        <option value="DOST">DOST</option>
+                                        {scholarshipData.length > 0 ? scholarshipData.map((scholarshipListData) => 
+                                            (<option key={scholarshipListData.id} value={scholarshipListData.id}>{scholarshipListData.scholarship_name}</option>)
+                                            ) 
+                                            : 
+                                            ''
+                                        }
                                     </select>
                                     <label htmlFor="floatingScholarship">Scholarship</label>
                                 </div>

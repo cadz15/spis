@@ -1,42 +1,83 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
+import { useEffect } from 'react';
 import { FileUploader } from 'react-drag-drop-files';
+import { toast } from 'react-toastify';
+import useAuthStore from '../../Store/globalStates';
 import './UploadDocument.css';
 
 const UploadDocument = () => {
     const [file, setFile] = useState(null);
+    const { jwt_token, userAuth } = useAuthStore();
     const fileTypes = ["doc", "docx", "pdf"];
 
-    const handleChange = (file) => {
-      setFile(file);
+	// we need to keep a reference of the toastId to be able to update it
+	const toastId = useRef(null);
+
+    const handleChange = (files) => {
+		setFile(files);
     };
 
 
-    const handleSubmission = () => {
-		const formData = new FormData();
+    const handleSubmission = async() => {
+		const data = new FormData();
 
-		formData.append('File', file);
+		data.append('file', file);
+		data.append('filename', file.name)
+		data.append('scholar_id', userAuth.id);
+		data.append('token', jwt_token);
 
-		fetch(
-			'https://freeimage.host/api/1/upload?key=<YOUR_API_KEY>',
+		// check if we already displayed a toast
+		if (toastId.current === null) {
+			toastId.current = toast('Upload in Progress', { progress: 30 });
+		} else {
+			toast.update(toastId.current, { progress: 40 });
+		}
+
+		await fetch(`${process.env.REACT_APP_API_LINK}/documents`,
 			{
 				method: 'POST',
-				body: formData,
-			}
-		)
+				headers: {
+					"Authorization" : `Bearer ${jwt_token}`,
+					'withCredentials': 'true'
+				},
+				body: data
+			})
 			.then((response) => response.json())
-			.then((result) => {
-				console.log('Success:', result);
+			.then((data) => {
+				toast.done(toastId.current);
+				if(data.status){
+					toast.success('File successfully uploaded!', {
+						position: toast.POSITION.TOP_RIGHT,
+					})
+				}else{
+					toast.error('Error on uploading!', {
+						position: toast.POSITION.TOP_RIGHT,
+					})
+				}
+				toastId.current = null;
 			})
 			.catch((error) => {
-				console.error('Error:', error);
-			});
+				toast.error('Error on uploading!', {
+					position: toast.POSITION.TOP_RIGHT,
+				})
+				toast.done(toastId.current);
+				toastId.current = null;
+			})
 	};
+
+
+	useEffect(() => {
+		if(file !== null) {
+			handleSubmission();
+			setFile(null);
+		}
+	},[file])
 
 
   return (
     <div className='card'>
-        <div className='card-body m-0 p-3'>
-            <FileUploader handleChange={handleChange} classes='form-file-upload' name='file' types={fileTypes} />
+        <div className='card-body m-0 p-0'>
+			<FileUploader handleChange={handleChange} classes='form-file-upload' name='file' types={fileTypes} />
         </div>
     </div>
   )

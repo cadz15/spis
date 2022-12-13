@@ -31,7 +31,6 @@ const EventForm = () => {
         }
         )
         .then((response) => {
-            console.log(response)
             if(response.data.errors){
                 setHasError(response.data.errors)
                 setHideError(false);

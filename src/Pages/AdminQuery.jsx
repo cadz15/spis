@@ -10,7 +10,7 @@ const AdminQuery = () => {
     <div className='main-content-bg'>
         <div className='main-content p-4'>
             <div className='breacrumb-container mb-4'>
-                <span className='subtext fs-5'>Scholar Query and Concer</span>
+                <span className='subtext fs-5'>Scholar Query and Concern</span>
                 <div className='breadcrumbs d-flex align-items-center gap-2 subtext mt-2'>
                     <RiHome3Line /> <span className='breadcrumbs-text'>/</span> <span className='breadcrumbs-text'> Query & Concern</span>
                 </div>

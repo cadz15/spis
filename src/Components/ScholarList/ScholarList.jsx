@@ -84,7 +84,7 @@ const ScholarList = () => {
                 <div className={`event-list-table-container ${isLoading? 'list-loading':''}`}>
                     
                 <table className="table table-hover event-list-table">
-                    {(dataResponse?.length > 0 && dataResponse[0].data.length > 0) && 
+                    {(dataResponse?.length > 0 ) && 
                         (<thead>
                             <tr>
                                 <th className='py-3'>
@@ -101,8 +101,8 @@ const ScholarList = () => {
                     }
                     
                     <tbody>
-                        {(dataResponse?.length > 0 && dataResponse[0].data.length > 0) ? 
-                            dataResponse[0].data.map((scholarData) => (
+                        {(dataResponse?.length > 0) ? 
+                            dataResponse.map((scholarData) => (
                             <tr className='cursor-pointer' key={scholarData.id_number} tabIndex={scholarData.id_number} onClick={() => navigate(`/admin/profiles/${scholarData.id_number}`)}>
                                 <td className='py-3'>
                                         {`${scholarData.first_name} ${scholarData.last_name}`}

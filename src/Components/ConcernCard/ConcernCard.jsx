@@ -2,37 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './ConcernCard.css';
 
-const ConcernCard = () => {
-    const [dataList, setDataList] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-
-    const  fetchData = async () => {
-        setIsLoading(true);
-
-        await fetch(`api/link`) //change for API LINK
-        
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error(
-                `This is an HTTP error: The status is ${response.status}`
-                );
-            }
-            return response.json();
-        })
-        
-        .then((actualData) => setDataList(actualData))
-        
-        .catch((err) => {
-            console.log(err.message);
-        })
-        .finally(()=> {
-            setIsLoading(false);
-        });
-    }
-
-    useEffect(() => {
-        // fetchData()
-    }, []);
+const ConcernCard = (props) => {
+    
 
 
   return (
@@ -47,33 +18,32 @@ const ConcernCard = () => {
                 
             <table className="table table-hover document-card-table">
                 <tbody>
-                    {dataList.length > 0 ? 
-                        dataList.map((concernData, index) => (
-                            <tr key={index}>
-                                <td>
-                                <img className="avatar" src="https://cdn-icons-png.flaticon.com/512/3048/3048127.png" alt="User-Profile-Image" />
-                                </td>
-                                <td className='px-4'>
-                                    <div className='event-list-head pb-2'>
-                                        <p className='p-0 m-0 fw-bold event-list-title col-md-12'>{concernData.scholarName}</p>
-                                    </div>
-                                    <div className='event-list-body col-md-12'>
-                                        {concernData.query}
-                                    </div>
-                                </td>
-                            </tr>
-                         ))
-                         : 
-                         (
-                         <tr>
+                {props?.dataList.length > 0 ? 
+                    props?.dataList.map((queryData) => (
+                        <tr key={queryData.id}>
+                            <td className='py-3'>
+                                {queryData.scholars.first_name} {queryData.scholars.last_name}
+                            </td>
+                            <td className='py-3'>
+                                <div className='event-list-head pb-2'>
+                                    <p className='p-0 m-0 text-muted event-list-date'>{queryData.replies_count} Replies</p>
+                                </div>
+                                {queryData.details}
+                            </td>
+                        </tr>
+                    ))
+                    :
+                        (
+                        <tr>
                             <td>
                                 <div className='empty-list'>
-                                    No Query And Concern!
+                                    No Queries can be found!
                                 </div>
                             </td>
-                         </tr>
-                         )
-                    }
+                        </tr>
+                        
+                        )
+                    }  
                 </tbody>
             </table>
                 

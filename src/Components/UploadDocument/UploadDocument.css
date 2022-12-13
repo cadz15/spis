@@ -1,8 +1,9 @@
-.sc-bcXHqe {
+  .sc-bcXHqe {
     height: 200px !important;
     flex-direction: column;
     gap: 30%;
     padding-top: 30px !important;
+    width: 100% !important;
 }
 
 .dmajdp {

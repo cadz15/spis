@@ -1,44 +1,16 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { RiHome3Line } from 'react-icons/ri';
 import ChangePassword from '../Components/ChangePassword/ChangePassword';
-import DocumentCard from '../Components/DocumentCard/DocumentCard';
-import EventList from '../Components/EventList/EventList';
 import ScholarProfileDetails from '../Components/ScholarProfileDetails/ScholarProfileDetails';
-import useAuthStore from '../Store/globalStates';
+import EventList from '../Components/EventList/EventList';
+import DocumentCard from '../Components/DocumentCard/DocumentCard';
 import useTitle from '../Utils/useTitle';
+import { useParams } from 'react-router-dom';
 
-const ScholarProfile = () => {
-    const { jwt_token, userAuth } = useAuthStore();
-    const [isLoading, setIsLoading] = useState(false);
-    const [eventsList, setEventsList] = useState([]);
+const Profiles = () => {
+    const { id } = useParams(); //Get route parameter :id
 
-    useTitle(`Profile | ${userAuth.first_name} ${userAuth.last_name}`); // PAGE TITLE
-
-    const  fetchData = () => {
-        setIsLoading(true);
-        axios.get(`${process.env.REACT_APP_API_LINK}/events?id=${userAuth.id}`, 
-        { headers: {
-            "Authorization" : `Bearer ${jwt_token}`,
-            'Accept' : 'application/json',
-            'Content-Type': 'application/json',
-            'withCredentials': 'true'
-            }
-        }
-        )
-        .then((response) => {
-            setEventsList(response.data.map((event) => {
-                return event.event;
-            }));
-            setIsLoading(false);
-        })
-        .catch((error) => console.log(error));
-    }
-
-    useEffect(() => {
-        fetchData();
-    },[]);
-
+    useTitle('Scholar Profile'); // PAGE TITLE
   return (
     <>
         <div className='main-content-bg'>
@@ -54,10 +26,10 @@ const ScholarProfile = () => {
                     <div className='col-md-12 col-lg-12'>
                         <div className='row'>
                             <div className='col-sm-12 col-lg-6 col-md-12 mb-3'>
-                                <ScholarProfileDetails id_number={userAuth.id_number} />
+                                <ScholarProfileDetails id_number={id} />
                             </div>
                             <div className='col-sm-12  col-lg-6 col-md-12 mb-3'>
-                                <ChangePassword id_number={userAuth.id_number} />
+                                <ChangePassword />
                             </div>
                         </div>
                     </div>
@@ -67,7 +39,7 @@ const ScholarProfile = () => {
                     <div className='col-md-12 col-lg-12'>
                         <div className='row'>
                             <div className='col-sm-12 col-lg-6 col-md-12 mb-3'>
-                                <EventList handleListSelect={() => null} data={eventsList} isLoading={isLoading}/>
+                                <EventList />
                             </div>
                             <div className='col-sm-12  col-lg-6 col-md-12 mb-3'>
                                 <DocumentCard />
@@ -82,4 +54,4 @@ const ScholarProfile = () => {
   )
 }
 
-export default ScholarProfile;
+export default Profiles;

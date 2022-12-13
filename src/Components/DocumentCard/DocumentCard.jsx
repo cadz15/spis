@@ -1,40 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
+import useAuthStore from '../../Store/globalStates';
 import './DocumentCard.css';
 
-const DocumentCard = () => {
-    const [dataList, setDataList] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-
-    const  fetchData = async () => {
-        setIsLoading(true);
-
-        await fetch(`api/link`) //change for API LINK
-        
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error(
-                `This is an HTTP error: The status is ${response.status}`
-                );
-            }
-            return response.json();
-        })
-        
-        .then((actualData) => setDataList(actualData))
-        
-        .catch((err) => {
-            console.log(err.message);
-        })
-        .finally(()=> {
-            setIsLoading(false);
-        });
-    }
-
-    useEffect(() => {
-        // fetchData()
-    }, [])
-
-
+const DocumentCard = (props) => {
+    const {  scholarshipData } = useAuthStore();
+   
   return (
     <div className="card latest-update-card p-0">
         <div className="card-header p-3">
@@ -43,10 +14,10 @@ const DocumentCard = () => {
             </div>
         </div>
         <div className="card-body p-0 m-0 ">
-            <div className={`latest-update-box  ${isLoading? 'list-loading':''}`}>
+            <div className={`latest-update-box  ${props.isLoading? 'list-loading':''}`}>
                 
             <table className="table table-hover document-card-table">
-                {dataList.length > 0 && (
+                {props.dataList.length > 0 && (
                     <thead>
                         <tr>
                             <th scope="col">Scholar</th>
@@ -58,17 +29,17 @@ const DocumentCard = () => {
                 )}
 
                 <tbody>
-                {dataList.length > 0 ?  
-                     dataList.map((documentData, index) => (
-                        <tr key={index} >
-                            <th scope="row">{documentData.scholarName}</th>
-                            <td>{documentData.scholarship}</td>
-                            <td>{documentData.documentName}</td>
-                            <td>{documentData.documentStatus}</td>
+                    {props?.dataList?.length > 0 ?  
+                        props?.dataList?.map((documentData) => (                            
+                        <tr key={documentData.id} tabIndex={documentData.id} className={`cursor-pointer`} >
+                            <td >{documentData.scholars.first_name} {documentData.scholars.last_name}</td>
+                            <td>{scholarshipData.filter((scholarship_name) => scholarship_name.id === documentData.scholars.scholarship_id)[0].scholarship_name}</td>
+                            <td>{documentData.filename.substring(0, 20)}...</td>
+                            <td ><span className={`document-${documentData.document_histories[0].status}`}>{documentData.document_histories[0].status}</span></td>
                         </tr>
-                     ))
-                     :
-                     (
+                    ))
+                    :
+                    (
                     <tr>
                         <td>
                             <div className='empty-list'>
@@ -76,8 +47,8 @@ const DocumentCard = () => {
                             </div>
                         </td>
                     </tr>
-                     )
-                }   
+                    )
+                    } 
                     
                 </tbody>
             </table>

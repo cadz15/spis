@@ -3,12 +3,14 @@ import React, { useEffect, useState } from 'react';
 import { RiHome3Line } from 'react-icons/ri';
 import EventList from '../Components/EventList/EventList';
 import useAuthStore from '../Store/globalStates';
+import useTitle from '../Utils/useTitle';
 
 const ScholarEvent = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [eventsList, setEventsList] = useState([]);
     const { jwt_token, userAuth } = useAuthStore();
 
+    useTitle(`Event | ${userAuth.first_name} ${userAuth.last_name}`); // PAGE TITLE
 
     const  fetchData = () => {
         setIsLoading(true);

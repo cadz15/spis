@@ -10,9 +10,60 @@ import './Main.css';
 
 const Main = () => {
     const [dataList, setDataList] = useState([]);
+    const [documentDataList, setDocumentDataList] = useState([]);
+    const [concernDataList, setConcernDataList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [isDocumentLoading, setDocumentIsLoading] = useState(false);
+    const [isConcernLoading, setConcernIsLoading] = useState(false);
     const [eventsList, setEventsList] = useState([]);
     const { jwt_token } = useAuthStore();
+
+
+    const  fetchConcernData = async (scholarName='', scholarship='') => {
+        setConcernIsLoading(true);
+        await axios.get(`${process.env.REACT_APP_API_LINK}/concern/search?scholarName=${scholarName}&scholarship=${scholarship}&limit=5`,
+            {headers: {
+                "Authorization" : `Bearer ${jwt_token}`,
+                'Accept' : 'application/json',
+                'Content-Type': 'application/json',
+                'withCredentials': 'true'
+                }
+                }
+            )
+            .then((response) => {
+                setConcernDataList(response.data);
+            })
+            .catch((error) => {
+                // console.log(error);
+                // console.log(jwt_token);
+            })
+            
+            setConcernIsLoading(false);
+    }
+
+    const  fetchDocumentData = async (scholarName='', scholarship='') => {
+        setDocumentIsLoading(true);
+        await axios.get(`${process.env.REACT_APP_API_LINK}/documents/search?scholarName=${scholarName}&scholarship=${scholarship}&limit=5`,
+            {headers: {
+                "Authorization" : `Bearer ${jwt_token}`,
+                'Accept' : 'application/json',
+                'Content-Type': 'application/json',
+                'withCredentials': 'true'
+                }
+                }
+            )
+            .then((response) => {
+                setDocumentDataList(response.data.documents);
+                // console.log(response.data);
+            })
+            .catch((error) => {
+                // console.log(error);
+                // console.log(jwt_token);
+            })
+            
+        setDocumentIsLoading(false);
+    }
+
 
     const  fetchData = () => {
         setIsLoading(true);
@@ -61,6 +112,8 @@ const Main = () => {
 
     
     fetchData();
+    fetchDocumentData();
+    fetchConcernData();
     }, []);
 
 
@@ -97,10 +150,10 @@ const Main = () => {
                     <div className='col-md-12 col-lg-12'>
                         <div className='row'>
                             <div className='col-sm-12 col-lg-6 col-md-12 mb-3'>
-                                <DocumentCard />
+                                <DocumentCard dataList={documentDataList} isLoading={isDocumentLoading}/>
                             </div>
                             <div className='col-sm-12  col-lg-6 col-md-12 mb-3'>
-                                <ConcernCard />
+                                <ConcernCard dataList={concernDataList} isLoading={isConcernLoading} />
                             </div>
 
                         </div>

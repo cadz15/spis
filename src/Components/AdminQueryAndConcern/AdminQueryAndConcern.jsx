@@ -1,66 +1,52 @@
+import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import useAuthStore from '../../Store/globalStates';
 import AdminQueryModal from '../AdminQueryModal/AdminQueryModal';
 import './AdminQueryAndConcern.css';
 
 const AdminQueryAndConcern = () => {
     const [showModal, setShowModal] = useState(false);
     const [dataList, setDataList] = useState([]);
-    const [scholarshipList, setScholarshipList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [modalData, setModalData] = useState([]);
+    const { jwt_token, scholarshipData } = useAuthStore();
 
     const handleShowModal = (e) => {
-        if(e.currentTarget === e.target) setShowModal(current => !current);
-        setModalData(dataList[e.currentTarget.tabIndex]);
+        setModalData(dataList.filter((concern) => concern.id === e.currentTarget.tabIndex));
+        if(e.currentTarget === e.target) setShowModal(true);
     }
 
     const  fetchData = async (scholarName='', scholarship='') => {
         setIsLoading(true);
-
-        await fetch(`api/link`) //Change for API Link
-        
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error(
-                `This is an HTTP error: The status is ${response.status}`
-                );
-            }
-            return response.json();
-        })
-        
-        .then((actualData) => setDataList(actualData))
-        
-        .catch((err) => {
-            console.log(err.message);
-        })
-        .finally(()=> {
-            setIsLoading(false);
-        });
+        await axios.get(`${process.env.REACT_APP_API_LINK}/concern/search?scholarName=${scholarName}&scholarship=${scholarship}`,
+            {headers: {
+                "Authorization" : `Bearer ${jwt_token}`,
+                'Accept' : 'application/json',
+                'Content-Type': 'application/json',
+                'withCredentials': 'true'
+                }
+                }
+            )
+            .then((response) => {
+                setDataList(response.data);
+            })
+            .catch((error) => {
+                // console.log(error);
+                // console.log(jwt_token);
+            })
+            
+        setIsLoading(false);
     }
-
-
-    const fetchScholarship = async () => {
-        await fetch(`api/link`) //Change for API Link
-        
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error(
-                `This is an HTTP error: The status is ${response.status}`
-                );
-            }
-            return response.json();
-        })
-        
-        .then((actualData) => setScholarshipList(actualData))
-    }
-
 
     const handleSearchButton = () => {
-        //fetchData()
+        const scholar_name = document.getElementById('floatingSearchBox').value;
+        const scholarship_id = document.getElementById('floatingScholarship').value;
+        
+        fetchData(scholar_name, scholarship_id);
     }
 
     useEffect(() => {
-       //fetchData
+       fetchData();
        //fetchScholarship
     }, [])
 
@@ -68,7 +54,7 @@ const AdminQueryAndConcern = () => {
 
   return (
     <div>
-        <AdminQueryModal show={showModal} data={modalData} onClose={handleShowModal} />
+        <AdminQueryModal show={showModal} data={modalData} forceClose={() => setShowModal(false)} onClose={(e) => {if(e.currentTarget === e.target) setShowModal(false)}} />
         <div className='search-container'>
             <div className='row'>
                 <div className='col-md-12 col-sm-12'>
@@ -83,10 +69,11 @@ const AdminQueryAndConcern = () => {
                             <div className="form-floating mb-3">
                                 <select className="form-select" id='floatingScholarship'>
                                     <option value="0">All</option>
-                                    {scholarshipList.length > 0 &&
-                                        scholarshipList.map(({i, scholarshipData}) => (
-                                            <option value={scholarshipData.id}>{scholarshipData.scholarship}</option>
-                                        ))
+                                    {scholarshipData.length > 0 ? scholarshipData.map((scholarshipListData) => 
+                                        (<option key={scholarshipListData.id} value={scholarshipListData.id}>{scholarshipListData.scholarship_name}</option>)
+                                        ) 
+                                        : 
+                                        ''
                                     }
                                 </select>
                                 <label htmlFor="floatingScholarship">Scholarship</label>
@@ -124,17 +111,20 @@ const AdminQueryAndConcern = () => {
 
                     <tbody>
                         {dataList.length > 0 ? 
-                            dataList.map((queryData, index) => (
-                                <tr key={index}>
+                            dataList.map((queryData) => (
+                                <tr key={queryData.id}>
                                     <td className='py-3'>
-                                        {queryData.scholar}
+                                        {queryData.scholars.first_name} {queryData.scholars.last_name}
                                     </td>
                                     <td className='py-3'>
-                                        {queryData.query}
+                                        <div className='event-list-head pb-2'>
+                                            <p className='p-0 m-0 text-muted event-list-date'>{queryData.replies_count} Replies</p>
+                                        </div>
+                                        {queryData.details}
                                     </td>
                                     <td className='py-3'>
                                         <button className='btn btn-success' tabIndex={queryData.id} onClick={handleShowModal}>
-                                            Action
+                                            Reply
                                         </button>
                                     </td>
                                 </tr>

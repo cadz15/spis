@@ -17,6 +17,9 @@
     --dark: #343a40;
 }
 
+textarea {    
+  min-height: 150px !important;
+}
 
 
 * {
@@ -163,4 +166,32 @@ a, a:hover {
 
 .bg-dark {
     background-color: var(--dark) !important;
+}
+
+
+
+.document-uploaded {
+    background-color: var(--secondary);
+    padding: 1px;
+    border-radius: 5px;
+}
+.document-pending {
+    background-color: var(--info);
+    padding: 1px;
+    border-radius: 5px;
+}
+.document-approved {
+    background-color: var(--success);
+    padding: 1px;
+    border-radius: 5px;
+}
+.document-denied {
+    background-color: var(--danger);
+    padding: 1px;
+    border-radius: 5px;
+}
+
+.scrollable-list {
+    max-height: calc(100vh - 250px);
+    overflow: auto;
 }

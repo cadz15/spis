@@ -7,9 +7,6 @@
     color: var(--text-subtext-alt);
 }
 
-.main-content {
-    overflow-x: hidden;
-}
 
 .breadcrumbs-text {
     font-size: small;
