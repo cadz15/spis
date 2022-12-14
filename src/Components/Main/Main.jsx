@@ -16,7 +16,29 @@ const Main = () => {
     const [isDocumentLoading, setDocumentIsLoading] = useState(false);
     const [isConcernLoading, setConcernIsLoading] = useState(false);
     const [eventsList, setEventsList] = useState([]);
+    const [scholarCount, setScholarCount] = useState([]);
     const { jwt_token } = useAuthStore();
+
+    const fetchScholarshipCounts = async() => {
+
+        await axios.get(`${process.env.REACT_APP_API_LINK}/scholarship/counts?limit=4`,
+        {headers: {
+            "Authorization" : `Bearer ${jwt_token}`,
+            'Accept' : 'application/json',
+            'Content-Type': 'application/json',
+            'withCredentials': 'true'
+            }
+            }
+        )
+        .then((response) => {
+            setScholarCount(response.data);
+            // console.log(response);
+        })
+        .catch((error) => {
+            // console.log(error);
+            // console.log(jwt_token);
+        })
+    }
 
 
     const  fetchConcernData = async (scholarName='', scholarship='') => {
@@ -86,31 +108,9 @@ const Main = () => {
 
 
     useEffect(() => {
-        setDataList([
-            {
-            cardType: 'primary',
-            scholarship: 'CHED',
-            scholarshipActiveTotal: 15,
-            scholarshipTotal: 200
-        },{
-            cardType: 'success',
-            scholarship: 'FHE',
-            scholarshipActiveTotal: 10,
-            scholarshipTotal: 200
-        },{
-            cardType: 'warning',
-            scholarship: 'DOST',
-            scholarshipActiveTotal: 23,
-            scholarshipTotal: 200
-        },{
-            cardType: 'danger',
-            scholarship: 'TES',
-            scholarshipActiveTotal: 7,
-            scholarshipTotal: 200
-        },
-    ]);
+        setDataList(['primary', 'success', 'warning', 'danger']);
 
-    
+    fetchScholarshipCounts();
     fetchData();
     fetchDocumentData();
     fetchConcernData();
@@ -131,9 +131,9 @@ const Main = () => {
                 <div className='row'>
                     <div className='col-sm-12 col-md-12'>
                         <div className='row'>
-                            {dataList && dataList.map((dataScholarship, index) => 
+                            {scholarCount && scholarCount.map((dataScholarship, index) => 
                             (<div  key={index} className='col-md-6  col-lg-3 col-sm-12 mb-3'>
-                                <ScholarCard cardType={dataScholarship.cardType} data={dataScholarship} />
+                                <ScholarCard cardType={dataList[index]} data={dataScholarship} />
                             </div>)
                             )}
                         </div>

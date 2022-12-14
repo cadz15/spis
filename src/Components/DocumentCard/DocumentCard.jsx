@@ -17,7 +17,7 @@ const DocumentCard = (props) => {
             <div className={`latest-update-box  ${props.isLoading? 'list-loading':''}`}>
                 
             <table className="table table-hover document-card-table">
-                {props.dataList.length > 0 && (
+                {props?.dataList?.length > 0 && (
                     <thead>
                         <tr>
                             <th scope="col">Scholar</th>

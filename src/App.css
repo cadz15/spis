@@ -45,6 +45,10 @@ a, a:hover {
     cursor: pointer;
 }
 
+.downloadable:hover {
+    color: var(--info);
+}
+
 .admin-layout {
     display: flex;
     flex-direction: column;

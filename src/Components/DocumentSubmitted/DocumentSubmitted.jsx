@@ -40,7 +40,6 @@ const DocumentSubmitted = () => {
 
     const handleListSelect = (e) => {
         setSelectedId(dataList.filter((documentData) => documentData.id === e.currentTarget.tabIndex));
-        console.log(selectedId, e.currentTarget.tabIndex);
         setShowModal(true);
     }
 

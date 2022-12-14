@@ -1,4 +1,5 @@
 import axios from 'axios';
+import fileDownload from 'js-file-download';
 import React from 'react';
 import { toast } from 'react-toastify';
 import useAuthStore from '../../Store/globalStates';
@@ -6,6 +7,20 @@ import './AdminDocumentModal.css';
 
 const AdminDocumentModal = (props) => {
     const { jwt_token } = useAuthStore();
+
+    const downloadFile = (filename) => {
+        axios.get(`${process.env.REACT_APP_API_LINK}/download?filename=${filename}`,{
+            headers: {
+                "Authorization" : `Bearer ${jwt_token}`,
+                'Accept' : 'application/json',
+                'Content-Type': 'application/json',
+                'withCredentials': 'true'
+                },
+            responseType: 'blob', // Important
+          }).then((response) => {
+            fileDownload(response.data, filename);
+          });
+    }
 
     const handleUpdateDocument = async() => {
         const status = document.getElementById('floatingStatus').value;
@@ -47,7 +62,7 @@ const AdminDocumentModal = (props) => {
             </div>
             <div className="modal-body">
                 <p>Scholar : <em>{props.data[0]?.scholars.first_name} {props.data[0]?.scholars.last_name}</em></p>
-                <p>Document : <em>{props.data[0]?.filename}</em></p>
+                <p>Document : <em className='cursor-pointer downloadable' onClick={() => downloadFile(props.data[0]?.filename)}>{props.data[0]?.filename}</em></p>
                 <div className="form-floating mb-3">
                     <select className="form-select" id='floatingStatus'>
                         {props.data[0]?.document_histories[0].status === 'uploaded' ?  
