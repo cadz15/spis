@@ -100,7 +100,7 @@ const ScholarDocumentUpload = () => {
                     <div className='col-md-12 col-lg-12'>
                         <div className='row'>
                             <div className='col-sm-12 col-lg-6 col-md-12 mb-3'>
-                                <UploadDocument />
+                                <UploadDocument refreshList={setRefreshList}/>
                             </div>
                             <div className='col-sm-12  col-lg-6 col-md-12 mb-3'>
                                 <ScholarUploadedDocument handleListSelect={handleListSelect} isLoading={isLoading} data={documentList} />

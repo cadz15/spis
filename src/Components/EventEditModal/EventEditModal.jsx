@@ -23,6 +23,32 @@ const EventEditModal = (props) => {
         setPreSelectedValues((current) => current.filter((recipient) => recipient !== removedItem));
     }
 
+    const handleDelete = async() => {
+        await axios.delete(`${process.env.REACT_APP_API_LINK}/events/${props.data[0].id}`,
+        { headers: {
+            "Authorization" : `Bearer ${jwt_token}`,
+            'Accept' : 'application/json',
+            'Content-Type': 'application/json',
+            'withCredentials': 'true'
+            }
+        }
+        )
+        .then((response) => {
+            if(response.data.errors){
+                setHasError(response.data.errors)
+                setHideError(false);
+            }else {
+                setHideError(true);
+                setHasError({});
+                toast.success('Event successfully deleted!', {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+                props.closeModalUpdate();
+                props.refreshList(true);
+            }
+        })
+        .catch((error) => console.log(error));
+    }
     
     const handleUpdateEvent = async() => {
         const title = document.getElementById('floatingEventTitle').value;
@@ -143,7 +169,7 @@ const EventEditModal = (props) => {
               <div className="modal-footer d-flex justify-content-between">
                   <button type="button" className="btn btn-secondary" onClick={handleCloseModal}>Close</button>
                     <div className="btn-group" role="group">
-                        <button type="button" className="btn btn-danger">Delete</button>
+                        <button type="button" className="btn btn-danger" onClick={handleDelete}>Delete</button>
                         <button type="button" className="btn btn-success" onClick={handleUpdateEvent} >Update</button>
                     </div>
               </div>

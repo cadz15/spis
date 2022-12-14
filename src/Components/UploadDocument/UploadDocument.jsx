@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import useAuthStore from '../../Store/globalStates';
 import './UploadDocument.css';
 
-const UploadDocument = () => {
+const UploadDocument = (props) => {
     const [file, setFile] = useState(null);
     const { jwt_token, userAuth } = useAuthStore();
     const fileTypes = ["doc", "docx", "pdf"];
@@ -55,6 +55,7 @@ const UploadDocument = () => {
 					})
 				}
 				toastId.current = null;
+				props.refreshList(true);
 			})
 			.catch((error) => {
 				toast.error('Error on uploading!', {
