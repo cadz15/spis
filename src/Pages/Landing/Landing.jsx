@@ -34,11 +34,15 @@ const Landing = () => {
         
         await axios.post(`${process.env.REACT_APP_API_LINK}/auth/login`, {username, password})
         .then((response) => {
-            if(response.data.hasOwnProperty('errors')){
-                setError('Empty Username or Password!');
-            }else{
+            if(response.data.status){
                 addUser(response.data.user);
                 setToken(response.data.access_token);
+            }else{
+                if(response.data.message === undefined) {
+                    setError('Empty Username or Password!');
+                }else{
+                    setError(response.data.message);
+                }
             }
         })
         .catch((error) => {
