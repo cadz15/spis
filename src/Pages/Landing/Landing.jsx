@@ -37,6 +37,8 @@ const Landing = () => {
             if(response.data.status){
                 addUser(response.data.user);
                 setToken(response.data.access_token);
+                    
+                hanldeGetScholarship()
             }else{
                 if(response.data.message === undefined) {
                     setError('Empty Username or Password!');
@@ -52,8 +54,7 @@ const Landing = () => {
     }
 
     useEffect(() => {
-        setError(null);        
-        hanldeGetScholarship()
+        setError(null);    
         if(userAuth?.account_type === 1){
             navigate('/admin/dashboard/');
         }else if(userAuth?.account_type === 2) {

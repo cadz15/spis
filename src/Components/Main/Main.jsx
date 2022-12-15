@@ -17,7 +17,7 @@ const Main = () => {
     const [isConcernLoading, setConcernIsLoading] = useState(false);
     const [eventsList, setEventsList] = useState([]);
     const [scholarCount, setScholarCount] = useState([]);
-    const { jwt_token } = useAuthStore();
+    const { jwt_token, scholarshipData } = useAuthStore();
 
     const fetchScholarshipCounts = async() => {
 
@@ -114,6 +114,8 @@ const Main = () => {
     fetchData();
     fetchDocumentData();
     fetchConcernData();
+
+    console.log(scholarshipData);
     }, []);
 
 
