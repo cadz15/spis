@@ -66,7 +66,8 @@ const ScholarProfileDetails = ({id_number}) => {
         .then((response) => {
             if (response.data.status) {
                 toast.success('Scholar successfully deleted!', {
-                    position: toast.POSITION.TOP_RIGHT
+                    position: toast.POSITION.TOP_RIGHT,
+                    onClose: () => {navigate('/admin/list');}
                   });
             }else{
                 toast.error('Error on deleting Scholar!', {
@@ -76,7 +77,7 @@ const ScholarProfileDetails = ({id_number}) => {
             }
         })
         .catch((error) => {
-            toast.error('Error on deleting Scholar!', {
+            toast.error('Server connection error!', {
                 position: toast.POSITION.TOP_RIGHT
               });
         })

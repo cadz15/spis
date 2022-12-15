@@ -29,7 +29,6 @@ const ScholarDocumentUpload = () => {
         }
         )
         .then((response) => {
-            console.log(response);
             setDocumentList(response.data.documents);
             setIsLoading(false);
         })

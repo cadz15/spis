@@ -1,13 +1,8 @@
 import React from 'react';
-import { useEffect } from 'react';
 import useAuthStore from '../../Store/globalStates';
 
 const ScholarUploadedDocument = (props) => {
     const { userAuth } = useAuthStore();
-
-    useEffect(() => {
-        console.log(userAuth);
-    },[props.data])
 
   return (
     <>

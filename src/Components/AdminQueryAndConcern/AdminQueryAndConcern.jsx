@@ -9,6 +9,7 @@ const AdminQueryAndConcern = () => {
     const [dataList, setDataList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [modalData, setModalData] = useState([]);
+    const [refreshList, setRefreshList] = useState(false);
     const { jwt_token, scholarshipData } = useAuthStore();
 
     const handleShowModal = (e) => {
@@ -47,14 +48,15 @@ const AdminQueryAndConcern = () => {
 
     useEffect(() => {
        fetchData();
+       setRefreshList(false);
        //fetchScholarship
-    }, [])
+    }, [refreshList])
 
     
 
   return (
     <div>
-        <AdminQueryModal show={showModal} data={modalData} forceClose={() => setShowModal(false)} onClose={(e) => {if(e.currentTarget === e.target) setShowModal(false)}} />
+        <AdminQueryModal show={showModal} data={modalData} refreshList={setRefreshList} forceClose={() => setShowModal(false)} onClose={(e) => {if(e.currentTarget === e.target) setShowModal(false)}} />
         <div className='search-container'>
             <div className='row'>
                 <div className='col-md-12 col-sm-12'>

@@ -37,6 +37,8 @@ const AdminQueryModal = (props) => {
                 toast.success('Reply successfully sent!', {
                     position: toast.POSITION.TOP_RIGHT,
                 });
+                
+                props.refreshList(true);
                 props.forceClose();
             }
         })
