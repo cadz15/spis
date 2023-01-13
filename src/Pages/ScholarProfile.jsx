@@ -5,19 +5,22 @@ import ChangePassword from '../Components/ChangePassword/ChangePassword';
 import DocumentCard from '../Components/DocumentCard/DocumentCard';
 import EventList from '../Components/EventList/EventList';
 import ScholarProfileDetails from '../Components/ScholarProfileDetails/ScholarProfileDetails';
+import ScholarUploadedDocument from '../Components/ScholarUploadedDocument/ScholarUploadedDocument';
 import useAuthStore from '../Store/globalStates';
 import useTitle from '../Utils/useTitle';
 
 const ScholarProfile = () => {
-    const { jwt_token, userAuth } = useAuthStore();
+    const { jwt_token, userAuth, activeAcademicYear } = useAuthStore();
     const [isLoading, setIsLoading] = useState(false);
     const [eventsList, setEventsList] = useState([]);
+    const [isDocumentLoading, setIsDocumentLoading] = useState(false);
+    const [documentList, setDocumentList] = useState(null);
 
     useTitle(`Profile | ${userAuth.first_name} ${userAuth.last_name}`); // PAGE TITLE
 
     const  fetchData = () => {
         setIsLoading(true);
-        axios.get(`${process.env.REACT_APP_API_LINK}/events?id=${userAuth.id}`, 
+        axios.get(`${process.env.REACT_APP_API_LINK}/events?id=${userAuth.id}&academic_year=${activeAcademicYear[0].academic_year}`, 
         { headers: {
             "Authorization" : `Bearer ${jwt_token}`,
             'Accept' : 'application/json',
@@ -35,8 +38,28 @@ const ScholarProfile = () => {
         .catch((error) => console.log(error));
     }
 
+    const  fetchDocumentData = () => {
+        setIsDocumentLoading(true);
+        axios.get(`${process.env.REACT_APP_API_LINK}/documents?id_number=${userAuth.id_number}`, 
+        { headers: {
+            "Authorization" : `Bearer ${jwt_token}`,
+            'Accept' : 'application/json',
+            'Content-Type': 'application/json',
+            'withCredentials': 'true'
+            }
+        }
+        )
+        .then((response) => {
+            console.log(response);
+            setDocumentList(response.data.documents);
+            setIsDocumentLoading(false);
+        })
+        .catch((error) => console.log(error));
+    }
+
     useEffect(() => {
         fetchData();
+        fetchDocumentData();
     },[]);
 
   return (
@@ -70,7 +93,7 @@ const ScholarProfile = () => {
                                 <EventList handleListSelect={() => null} data={eventsList} isLoading={isLoading}/>
                             </div>
                             <div className='col-sm-12  col-lg-6 col-md-12 mb-3'>
-                                <DocumentCard />
+                                <ScholarUploadedDocument handleListSelect={() => null} isLoading={isDocumentLoading} data={documentList} />
                             </div>
                         </div>
                     </div>

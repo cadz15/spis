@@ -12,6 +12,7 @@ const SMSBlastForm = (props) => {
     const [hasError, setHasError] = useState({});
     const [senderName, setSenderName] = useState('');
     const [smsDetails, setSMSDetails] = useState('');
+    const [preSelectedValues, setPreSelectedValues] = useState([]);
     const multiselectRef = useRef();
     
     const onChangeName = (e) => {
@@ -24,11 +25,26 @@ const SMSBlastForm = (props) => {
 
 
     const handleMultiselectSelect = (selectedList, selectedItem) => {
-        setSelectedRecipient((current) => [...current, selectedItem.id]);
+        if (selectedItem.id === 0 ){
+            setPreSelectedValues(props.recipientList);
+            setSelectedRecipient(props.recipientList.map((recipient) => recipient.id));
+        }else {
+            setSelectedRecipient((current) => [...current, selectedItem.id]);
+            setPreSelectedValues((current) => current.filter((recipient) => recipient.id !== 0));
+        }
     }
 
     const handleMultiselectRemove = (selectedList, removedItem) => {
-        setSelectedRecipient((current) => current.filter((recipient) => recipient !== removedItem.id));
+        if (removedItem.id === 0){
+            setPreSelectedValues([]);
+            setSelectedRecipient([]);
+        }else{
+            setSelectedRecipient((current) => current.filter((recipient) => recipient !== removedItem.id));        
+            setPreSelectedValues((current) => current.filter((recipient) => recipient !== removedItem)); 
+    
+            setSelectedRecipient((current) => current.filter((recipient) => recipient !== 0));
+            setPreSelectedValues((current) => current.filter((recipient) => recipient.id !== 0));              
+        }
     }
 
     const resetMultiselect = () => {
@@ -101,6 +117,7 @@ const SMSBlastForm = (props) => {
                             placeholder='Select Recipient'
                             onSelect={handleMultiselectSelect}
                             onRemove={handleMultiselectRemove}
+                            selectedValues={preSelectedValues}
                             ref={multiselectRef}
                         />
                 </div>

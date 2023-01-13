@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import useAuthStore from '../../Store/globalStates';
 
 const EventEditModal = (props) => {
-    const { jwt_token } = useAuthStore();
+    const { jwt_token, activeAcademicYear } = useAuthStore();
     const [selectedRecipient, setSelectedRecipient] = useState([]);
     const [hideError, setHideError] = useState(true);
     const [hasError, setHasError] = useState({});
@@ -14,13 +14,29 @@ const EventEditModal = (props) => {
 
 
     const handleMultiselectSelect = (selectedList, selectedItem) => {
-        setSelectedRecipient((current) => [...current, selectedItem.id]);
-        setPreSelectedValues((current) => [...current, selectedItem]);
+        if (selectedItem.id === 0 ){
+            setPreSelectedValues(props.recipientList);
+            setSelectedRecipient(props.recipientList.map((recipient) => recipient.id));
+        }else {
+            setSelectedRecipient((current) => [...current, selectedItem.id]);
+            setPreSelectedValues((current) => current.filter((recipient) => recipient.id !== 0));
+            // setPreSelectedValues((current) => [...current, selectedItem]);
+        }
     }
 
     const handleMultiselectRemove = (selectedList, removedItem) => {
-        setSelectedRecipient((current) => current.filter((recipient) => recipient !== removedItem.id));
-        setPreSelectedValues((current) => current.filter((recipient) => recipient !== removedItem));
+        // setSelectedRecipient((current) => current.filter((recipient) => recipient !== removedItem.id));
+        // setPreSelectedValues((current) => current.filter((recipient) => recipient !== removedItem));
+        if (removedItem.id === 0){
+            setPreSelectedValues([]);
+            setSelectedRecipient([]);
+        }else{
+            setSelectedRecipient((current) => current.filter((recipient) => recipient !== removedItem.id));        
+            setPreSelectedValues((current) => current.filter((recipient) => recipient !== removedItem)); 
+    
+            setSelectedRecipient((current) => current.filter((recipient) => recipient !== 0));
+            setPreSelectedValues((current) => current.filter((recipient) => recipient.id !== 0));              
+        }
     }
 
     const handleDelete = async() => {
@@ -56,8 +72,10 @@ const EventEditModal = (props) => {
         const event_end = document.getElementById('floatingEventDateTo').value;
         const details = document.getElementById('floatinEventDetail').value;
 
+        setSelectedRecipient((current) => current.filter((recipient) => recipient !== 0)); //remove option 'All' before updating
+
         await axios.put(`${process.env.REACT_APP_API_LINK}/events/${props.data[0].id}`, 
-        { title, event_start, event_end, recipients: selectedRecipient, details},
+        { title, event_start, event_end, recipients: selectedRecipient, details, academic_year: activeAcademicYear[0].academic_year},
         { headers: {
             "Authorization" : `Bearer ${jwt_token}`,
             'Accept' : 'application/json',
@@ -80,7 +98,15 @@ const EventEditModal = (props) => {
                 props.refreshList(true);
             }
         })
-        .catch((error) => console.log(error));
+        .catch((error) => {
+            toast.error('Server Error! Please contact system admin', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            props.closeModalUpdate();
+            props.refreshList(true);
+            setHideError(true);
+            setHasError({});
+        });
     }
 
     const handleCloseModal = (e) => {
@@ -88,13 +114,10 @@ const EventEditModal = (props) => {
     }
 
     const handlePrePopulateRecipient =() => {
-        let array_data = []
-
         props.data[0]?.event_individual.map((individual) => {
-            array_data.push(props.recipientList.filter((recipient) => recipient.id === individual.scholar_id)[0])
-            setSelectedRecipient((current) => [...current, props.recipientList.filter((recipient) => recipient.id === individual.scholar_id)[0].id])
-        })
-        setPreSelectedValues(array_data);
+            setPreSelectedValues((current) => [...current, ...props.recipientList.filter((recipient) => recipient.id === individual.scholar_id)]);
+            setSelectedRecipient((current) => [...current, props.recipientList.filter((recipient) => recipient === individual.scholar_id)[0]])
+        });
     }
 
     useEffect(() => {

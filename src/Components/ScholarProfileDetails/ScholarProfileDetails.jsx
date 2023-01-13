@@ -9,11 +9,20 @@ import { useNavigate } from 'react-router-dom';
 const ScholarProfileDetails = ({id_number}) => {
     const [scholarData, setScholarData] = useState(null);
     const [showModal, setShowModal] = useState(false);
-    const { jwt_token, userAuth, scholarshipData } = useAuthStore();
+    const { jwt_token, userAuth, scholarshipData, departmentAndCourses } = useAuthStore();
     const navigate = useNavigate();
+    const [courseAndMajors, setCourseAndMajors] = useState([]);
+
+    const handleOnChangeDepartment = (e) => {
+        setCourseAndMajors(departmentAndCourses.filter((course) => course.name === e.target.value));
+    }
+
+    const handleChangeDepartment = (department) => {
+        setCourseAndMajors(departmentAndCourses.filter((course) => course.name === department));
+    }
 
     
-    const handleUpdateScholarProfile = () => {
+    const handleUpdateScholarProfile = async() => {
         const first_name = document.getElementById('floatingFirstName').value;
         const last_name = document.getElementById('floatingLastName').value;
         const course = document.getElementById('floatingCourse').value;
@@ -22,11 +31,10 @@ const ScholarProfileDetails = ({id_number}) => {
         const year_level = document.getElementById('floatingYearLevel').value;
         const email = document.getElementById('floatingEmail').value;
         const phone_number = document.getElementById('floatingPhone').value;
-        const major = document.getElementById('floatingMajor').value;
 
         
-        axios.put(`${process.env.REACT_APP_API_LINK}/scholars/${id_number}`,
-        {first_name, last_name,  course, department, scholarship, year_level, email, phone_number, major, token: jwt_token}
+        await axios.put(`${process.env.REACT_APP_API_LINK}/scholars/${id_number}`,
+        {first_name, last_name,  course, department, scholarship, year_level, email, phone_number, token: jwt_token}
         ,{headers: {
             "Authorization" : `Bearer ${jwt_token}`,
             'Accept' : 'application/json',
@@ -96,6 +104,7 @@ const ScholarProfileDetails = ({id_number}) => {
             .then((response) => {
                 if(response.data.scholar.length > 0){
                     setScholarData(response.data.scholar[0]);
+                    setCourseAndMajors(departmentAndCourses.filter((course) => course.name === response.data.scholar[0].department));
                 }else{
                     navigate('/error/');
                 }
@@ -145,10 +154,25 @@ const ScholarProfileDetails = ({id_number}) => {
                                     </div>
                                     <div className=' col-md-6 col-sm-12 mb-3'>
                                         <div className="form-floating mb-3">
-                                            <input type="text" className="form-control" id="floatingCourse" placeholder="Course" required  defaultValue={scholarData?.course}/>
-                                            <label htmlFor="floatingCourse">Course</label>
+                                            {/* <input type="text" className="form-control" id="floatingDepartment" placeholder="Phone Number" required defaultValue={scholarData?.department}/> */}
+                                            <select className="form-select" id='floatingDepartment' required onChange={handleOnChangeDepartment}>
+                                                <option key={0} value=''>--Select Department--</option>
+                                                {departmentAndCourses?.length > 0 ? departmentAndCourses?.map((department) => {
+                                                    if(scholarData?.department === department.name){
+                                                        // handleChangeDepartment(department.name);
+                                                        return (<option key={department.name} value={department.name} selected>{department.name}</option>);
+                                                    }else{
+                                                        return (<option key={department.name} value={department.name}>{department.name}</option>);
+                                                    }
+                                                })
+                                                :
+                                                ''
+                                                }
+                                            
+                                            </select>
+                                            <label htmlFor="floatingDepartment">Department</label>
                                         </div>
-                                    </div>
+                                    </div>                                   
                                 </div>
                             </div>
                         </div>
@@ -156,10 +180,23 @@ const ScholarProfileDetails = ({id_number}) => {
                         <div className='row'>
                             <div className='col-md-12'>
                                 <div className='row'>
-                                    <div className=' col-md-6 col-sm-12 mb-3'>
+                                <div className=' col-md-6 col-sm-12 mb-3'>
                                         <div className="form-floating mb-3">
-                                            <input type="text" className="form-control" id="floatingDepartment" placeholder="Phone Number" required defaultValue={scholarData?.department}/>
-                                            <label htmlFor="floatingDepartment">Department</label>
+                                            {/* <input type="text" className="form-control" id="floatingCourse" placeholder="Course" required  defaultValue={scholarData?.course}/> */}
+                                            <select className="form-select" id='floatingCourse' required>
+                                                {courseAndMajors[0]?.course?.length > 0 ? courseAndMajors[0]?.course?.map((course) => {
+                                                    if(scholarData?.course === course){
+                                                        return (<option key={course} value={course} selected>{course}</option>)
+                                                    }else{
+                                                        return (<option key={course} value={course} >{course}</option>)
+                                                    }
+                                                })
+                                                :
+                                                ''
+                                                }
+                                            
+                                            </select>
+                                            <label htmlFor="floatingCourse">Course</label>
                                         </div>
                                     </div>
                                     <div className=' col-md-6 col-sm-12 mb-3'>
@@ -192,10 +229,10 @@ const ScholarProfileDetails = ({id_number}) => {
                                             <label htmlFor="floatingYearLevel">Year Level</label>
                                         </div> 
                                     </div>
-                                    <div className=' col-md-6 col-sm-12 mb-3'>
+                                    <div className=' col-md-6 col-sm-12 mb-3'>                              
                                         <div className="form-floating mb-3">
-                                            <input type="text" className="form-control" id="floatingMajor" placeholder="Major" required defaultValue={scholarData?.major}/>
-                                            <label htmlFor="floatingMajor">Major</label>
+                                            <input type="text" className="form-control" id="floatingPhone" placeholder="Phone Number" required defaultValue={scholarData?.phone_number}/>
+                                            <label htmlFor="floatingPhone">Phone Number</label>
                                         </div>
                                     </div>
                                 </div>
@@ -205,12 +242,7 @@ const ScholarProfileDetails = ({id_number}) => {
                         <div className='row'>
                             <div className='col-md-12'>
                                 <div className='row'>
-                                    <div className=' col-md-6 col-sm-12 mb-3'>                              
-                                        <div className="form-floating mb-3">
-                                            <input type="text" className="form-control" id="floatingPhone" placeholder="Phone Number" required defaultValue={scholarData?.phone_number}/>
-                                            <label htmlFor="floatingPhone">Phone Number</label>
-                                        </div>
-                                    </div>
+                                    
                                     <div className=' col-md-6 col-sm-12 mb-3'>
                                         <div className="form-floating mb-3">
                                             <input type="email" className="form-control" id="floatingEmail" placeholder="E-mail" required defaultValue={scholarData?.email}/>

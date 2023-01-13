@@ -199,3 +199,44 @@ a, a:hover {
     max-height: calc(100vh - 250px);
     overflow: auto;
 }
+
+
+.printable-body {
+    padding: 0;
+    margin: 0;
+    width: 100vw;
+    min-height: 100vh;
+}
+
+.printable-header {
+    height: 100px;
+    width: 100vw;
+}
+
+.printable-hr {
+    color: black;
+    background-color: black;
+    height: 2px;
+    width: 100vw;
+}
+
+.printable-header-link-text {
+    font-size: small;
+}
+.printable-header-link-text-ssm {
+    font-size: smaller;
+}
+
+.printable-logo {
+    width: 300px;
+}
+
+
+.printable-title {
+    font-weight: bold;
+    font-size: large;
+}
+
+.printable-table {
+    width: 100vw;
+}

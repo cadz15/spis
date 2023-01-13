@@ -20,6 +20,10 @@ import ScholarEvent from '../Pages/ScholarEvent';
 import Profiles from '../Pages/Profiles';
 import ScholarProfile from '../Pages/ScholarProfile';
 import ScholarQuery from '../Pages/ScholarQuery';
+import AdminRequirements from '../Pages/AdminRequirements';
+import AdminAcademicYear from '../Pages/AdminAcademicYear';
+import AdminReport from '../Pages/AdminReport';
+import AdminPrint from '../Pages/AdminPrint';
 
 const AppRoutes = () => {
   return (
@@ -30,13 +34,16 @@ const AppRoutes = () => {
         <Route path='event'  element={<AdminEvent />} />
         <Route path='smsblast'  element={<AdminSMSBlast />} />
         <Route path='scholarship'  element={<AdminScholarship />} />
+        <Route path='requirements'  element={<AdminRequirements />} />
+        <Route path='academic'  element={<AdminAcademicYear />} />
         <Route path='courses'  element={<AdminCourses />} />
         <Route path='register'  element={<RegisterScholar />} />
         <Route path='list'  element={<ListScholar />} />
         <Route path='scholardocument'  element={<AdminDocument />} />
         <Route path='query'  element={<AdminQuery />} />
+        <Route path='reports'  element={<AdminReport />} />
         <Route path='profiles'  element={<Profile />} />
-        <Route path='profiles/:id'  element={<Profiles />} />        
+        <Route path='profiles/:id/:year'  element={<Profiles />} />        
       </Route>
       <Route path='/scholar'  element={<div> <AdminLayout user={'scholar'} > <Outlet /> </AdminLayout></div> } >
         <Route path='/scholar'  element={<ScholarDashboard />} />
@@ -48,7 +55,7 @@ const AppRoutes = () => {
       </Route>
 
 
-        
+      <Route path='print'  element={<AdminPrint />} />
       <Route path='/'  element={<Landing />} />
       <Route path='/ForgotPassword' element={<ForgotPassword />} />
       <Route path='*'  element={<UnknownError />} />

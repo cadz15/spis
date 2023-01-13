@@ -2,6 +2,8 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { RiHome3Line } from 'react-icons/ri';
 import useAuthStore from '../../Store/globalStates';
+import AdminBarChart from '../AdminBarChart/AdminBarChart';
+import AdminPieChart from '../AdminPieChart/AdminPieChart';
 import ConcernCard from '../ConcernCard/ConcernCard';
 import DocumentCard from '../DocumentCard/DocumentCard';
 import EventList from '../EventList/EventList';
@@ -10,14 +12,14 @@ import './Main.css';
 
 const Main = () => {
     const [dataList, setDataList] = useState([]);
-    const [documentDataList, setDocumentDataList] = useState([]);
+    const [documentDataList, setDocumentDataList] = useState(null);
     const [concernDataList, setConcernDataList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isDocumentLoading, setDocumentIsLoading] = useState(false);
     const [isConcernLoading, setConcernIsLoading] = useState(false);
     const [eventsList, setEventsList] = useState([]);
     const [scholarCount, setScholarCount] = useState([]);
-    const { jwt_token, scholarshipData } = useAuthStore();
+    const { jwt_token, scholarshipData, activeAcademicYear } = useAuthStore();
 
     const fetchScholarshipCounts = async() => {
 
@@ -43,7 +45,7 @@ const Main = () => {
 
     const  fetchConcernData = async (scholarName='', scholarship='') => {
         setConcernIsLoading(true);
-        await axios.get(`${process.env.REACT_APP_API_LINK}/concern/search?scholarName=${scholarName}&scholarship=${scholarship}&limit=5`,
+        await axios.get(`${process.env.REACT_APP_API_LINK}/concern/search?scholarName=${scholarName}&scholarship=${scholarship}&academic_year=${activeAcademicYear[0].academic_year}&limit=5`,
             {headers: {
                 "Authorization" : `Bearer ${jwt_token}`,
                 'Accept' : 'application/json',
@@ -53,7 +55,10 @@ const Main = () => {
                 }
             )
             .then((response) => {
-                setConcernDataList(response.data);
+                setConcernDataList(response.data.map((concern) => {
+                    concern.scholars = concern.scholar_histories.scholars
+                    return concern
+                }));
             })
             .catch((error) => {
                 // console.log(error);
@@ -65,7 +70,7 @@ const Main = () => {
 
     const  fetchDocumentData = async (scholarName='', scholarship='') => {
         setDocumentIsLoading(true);
-        await axios.get(`${process.env.REACT_APP_API_LINK}/documents/search?scholarName=${scholarName}&scholarship=${scholarship}&limit=5`,
+        await axios.get(`${process.env.REACT_APP_API_LINK}/documents/search?scholarName=${scholarName}&scholarship=${scholarship}&academic_year=${activeAcademicYear[0].academic_year}&limit=5`,
             {headers: {
                 "Authorization" : `Bearer ${jwt_token}`,
                 'Accept' : 'application/json',
@@ -75,8 +80,12 @@ const Main = () => {
                 }
             )
             .then((response) => {
-                setDocumentDataList(response.data.documents);
-                // console.log(response.data);
+                setDocumentDataList(response.data.documents.map((document) => {
+                    document.scholars = document.scholar_histories.scholars
+                    return document
+                }));
+
+                // console.log(documentDataList);
             })
             .catch((error) => {
                 // console.log(error);
@@ -87,9 +96,9 @@ const Main = () => {
     }
 
 
-    const  fetchData = () => {
+    const  fetchData = async() => {
         setIsLoading(true);
-        axios.get(`${process.env.REACT_APP_API_LINK}/events`, 
+        await axios.get(`${process.env.REACT_APP_API_LINK}/events?academic_year=${activeAcademicYear[0].academic_year}`, 
         { headers: {
             "Authorization" : `Bearer ${jwt_token}`,
             'Accept' : 'application/json',
@@ -111,11 +120,10 @@ const Main = () => {
         setDataList(['primary', 'success', 'warning', 'danger']);
 
     fetchScholarshipCounts();
-    fetchData();
     fetchDocumentData();
+    fetchData();
     fetchConcernData();
 
-    console.log(scholarshipData);
     }, []);
 
 
@@ -130,7 +138,22 @@ const Main = () => {
             </div>
 
             <div className=''>
+
                 <div className='row'>
+                    <div className='col-md-12 col-lg-12'>
+                        <div className='row'>
+                            <div className='col-sm-12 col-lg-7 col-md-12 mb-3'>
+                                <AdminBarChart />
+                            </div>
+                            <div className='col-sm-12  col-lg-5 col-md-12 mb-3'>
+                                <AdminPieChart />
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                {/* <div className='row'>
                     <div className='col-sm-12 col-md-12'>
                         <div className='row'>
                             {scholarCount && scholarCount.map((dataScholarship, index) => 
@@ -140,7 +163,7 @@ const Main = () => {
                             )}
                         </div>
                     </div>
-                </div>
+                </div> */}
 
                 <div className='row'>
                     <div className='mx-1 my-3'>

@@ -8,13 +8,13 @@ import useTitle from '../Utils/useTitle';
 const ScholarEvent = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [eventsList, setEventsList] = useState([]);
-    const { jwt_token, userAuth } = useAuthStore();
+    const { jwt_token, userAuth, activeAcademicYear } = useAuthStore();
 
     useTitle(`Event | ${userAuth.first_name} ${userAuth.last_name}`); // PAGE TITLE
 
     const  fetchData = () => {
         setIsLoading(true);
-        axios.get(`${process.env.REACT_APP_API_LINK}/events?id=${userAuth.id}`, 
+        axios.get(`${process.env.REACT_APP_API_LINK}/events?id=${userAuth.id}&academic_year=${activeAcademicYear[0].academic_year}`, 
         { headers: {
             "Authorization" : `Bearer ${jwt_token}`,
             'Accept' : 'application/json',
@@ -24,9 +24,7 @@ const ScholarEvent = () => {
         }
         )
         .then((response) => {
-            setEventsList(response.data.map((event) => {
-                return event.event;
-            }));
+            setEventsList(response.data);
             setIsLoading(false);
         })
         .catch((error) => console.log(error));

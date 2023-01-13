@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { SiGooglescholar, SiCoursera } from 'react-icons/si';
 import { AiFillCaretDown } from 'react-icons/ai';
 import { CgProfile } from 'react-icons/cg';
-import { MdOutlineLogout, MdEventNote, MdOutlinePersonAddAlt } from 'react-icons/md';
+import { MdOutlineLogout, MdEventNote, MdOutlinePersonAddAlt, MdOutlineEditNote } from 'react-icons/md';
 import { RiHome3Line, RiMenu2Line, RiQuestionnaireLine }  from 'react-icons/ri';
+import { GiCalendarHalfYear } from 'react-icons/gi';
 import { FaSms } from 'react-icons/fa';
 import { BsPersonLinesFill } from 'react-icons/bs';
 import { IoDocumentAttachOutline } from 'react-icons/io5';
+import { TbReportSearch } from 'react-icons/tb';
 import './style.css';
 import { Link, NavLink } from 'react-router-dom';
 import useAuthStore from '../../Store/globalStates';
@@ -156,6 +158,20 @@ const Sidebar = (props) => {
 					</li>
 
 					<li className="nav-item pcoded-menu-caption">
+						<label>Reports</label>
+						<hr className='hr-hidden' />
+					</li>
+
+					<li className="nav-item">
+						<NavLink to="/admin/reports" className="nav-link mx-3 my-2 d-flex rounded gap-3 align-items-center px-2">
+							<TbReportSearch /> 
+							<span>
+								Reports
+							</span>
+						</NavLink>
+					</li>
+
+					<li className="nav-item pcoded-menu-caption">
 						<label>Master List</label>
 						<hr className='hr-hidden' />
 					</li>
@@ -165,6 +181,22 @@ const Sidebar = (props) => {
 							<SiGooglescholar /> 
 							<span>
 								Scholarship
+							</span>
+						</NavLink>
+					</li>
+					<li className="nav-item">
+						<NavLink to="/admin/requirements" className="nav-link mx-3 my-2 d-flex rounded gap-3 align-items-center px-2">
+							<MdOutlineEditNote /> 
+							<span>
+								Requirements
+							</span>
+						</NavLink>
+					</li>
+					<li className="nav-item">
+						<NavLink to="/admin/academic" className="nav-link mx-3 my-2 d-flex rounded gap-3 align-items-center px-2">
+							<GiCalendarHalfYear /> 
+							<span>
+								Academic Year
 							</span>
 						</NavLink>
 					</li>

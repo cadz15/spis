@@ -7,21 +7,82 @@ import useTitle from '../../Utils/useTitle';
 
 const Landing = () => {
     const [error, setError] = useState(null);
-    const { userAuth, addUser, setToken, jwt_token, setScholarships } = useAuthStore();
+    const { userAuth ,addUser, setToken, setScholarships, setAcademicYear, setActiveAcademicYear, setRequirements } = useAuthStore();
     const navigate = useNavigate();
 
     useTitle('Welcome to SPIS'); // PAGE TITLE
 
 
-    const hanldeGetScholarship = async () => {
+    const hanldeGetScholarship = async (auth_token) => {
         await axios.get(`${process.env.REACT_APP_API_LINK}/scholarship`, { headers: {
-            "Authorization" : `Bearer ${jwt_token}`,
+            "Authorization" : `Bearer ${auth_token}`,
             'withCredentials': 'true'
             }
             }
         )
         .then((response) => {
             setScholarships(response.data)
+            // console.log(response.data);
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+    }
+
+    const handleGetRequirements = async (auth_token) => {
+        await axios.get(`${process.env.REACT_APP_API_LINK}/requirements`, { headers: {
+            "Authorization" : `Bearer ${auth_token}`,
+            'withCredentials': 'true'
+            }
+            }
+        )
+        .then((response) => {
+            setRequirements(response.data.requirements)
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+    }
+
+    const handleGetRequirementsScholar = async (auth_token, id) => {
+        await axios.get(`${process.env.REACT_APP_API_LINK}/requirements/${id}`, { headers: {
+            "Authorization" : `Bearer ${auth_token}`,
+            'withCredentials': 'true'
+            }
+            }
+        )
+        .then((response) => {
+            setRequirements(response.data.requirements);
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+    }
+
+    const handleGetAcademicYear = async (auth_token) => {
+        await axios.get(`${process.env.REACT_APP_API_LINK}/academic`, {
+            headers: {
+                "Authorization" : `Bearer ${auth_token}`,
+                'withCredentials': 'true'
+            }
+        })
+        .then((response) => {            
+            setAcademicYear(response.data.academicYears)
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+    }
+
+    const handleGetActiveAcademicYear = async (auth_token) => {
+        await axios.get(`${process.env.REACT_APP_API_LINK}/academic/active-year`, {
+            headers: {
+                "Authorization" : `Bearer ${auth_token}`,
+                'withCredentials': 'true'
+            }
+        })
+        .then((response) => {
+            setActiveAcademicYear(response.data.activeYear)
         })
         .catch((error) => {
             console.log(error);
@@ -35,10 +96,17 @@ const Landing = () => {
         await axios.post(`${process.env.REACT_APP_API_LINK}/auth/login`, {username, password})
         .then((response) => {
             if(response.data.status){
+                hanldeGetScholarship(response.data.access_token);
+                handleGetAcademicYear(response.data.access_token);
+                handleGetActiveAcademicYear(response.data.access_token);
+                if(response.data.user.account_type === 2){
+                    handleGetRequirementsScholar(response.data.access_token, response.data.user.id)
+                }else{
+                    handleGetRequirements(response.data.access_token);
+                }
+                
                 addUser(response.data.user);
                 setToken(response.data.access_token);
-                    
-                hanldeGetScholarship()
             }else{
                 if(response.data.message === undefined) {
                     setError('Empty Username or Password!');

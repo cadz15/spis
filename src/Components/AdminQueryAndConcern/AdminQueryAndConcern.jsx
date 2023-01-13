@@ -10,16 +10,16 @@ const AdminQueryAndConcern = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [modalData, setModalData] = useState([]);
     const [refreshList, setRefreshList] = useState(false);
-    const { jwt_token, scholarshipData } = useAuthStore();
+    const { jwt_token, scholarshipData, academicYear } = useAuthStore();
 
     const handleShowModal = (e) => {
         setModalData(dataList.filter((concern) => concern.id === e.currentTarget.tabIndex));
         if(e.currentTarget === e.target) setShowModal(true);
     }
 
-    const  fetchData = async (scholarName='', scholarship='') => {
+    const  fetchData = async (scholarName='', year='', scholarship='') => {
         setIsLoading(true);
-        await axios.get(`${process.env.REACT_APP_API_LINK}/concern/search?scholarName=${scholarName}&scholarship=${scholarship}`,
+        await axios.get(`${process.env.REACT_APP_API_LINK}/concern/search?scholarName=${scholarName}&scholarship=${scholarship}&academicYear=${year}`,
             {headers: {
                 "Authorization" : `Bearer ${jwt_token}`,
                 'Accept' : 'application/json',
@@ -29,7 +29,10 @@ const AdminQueryAndConcern = () => {
                 }
             )
             .then((response) => {
-                setDataList(response.data);
+                setDataList(response.data.map((concern) => {
+                    concern.scholars = concern.scholar_histories.scholars
+                    return concern
+                }));
             })
             .catch((error) => {
                 // console.log(error);
@@ -42,8 +45,9 @@ const AdminQueryAndConcern = () => {
     const handleSearchButton = () => {
         const scholar_name = document.getElementById('floatingSearchBox').value;
         const scholarship_id = document.getElementById('floatingScholarship').value;
+        const academic_year = document.getElementById('floatingYear').value;
         
-        fetchData(scholar_name, scholarship_id);
+        fetchData(scholar_name, academic_year, scholarship_id);
     }
 
     useEffect(() => {
@@ -61,10 +65,24 @@ const AdminQueryAndConcern = () => {
             <div className='row'>
                 <div className='col-md-12 col-sm-12'>
                     <div className='row'>
-                        <div className='search-box col-sm-12 col-md-6'>
+                        <div className='search-box col-sm-12 col-md-4'>
                             <div className="form-floating mb-3">
                                 <input type="text" className="form-control" id="floatingSearchBox" placeholder="Scholar Name" />
                                 <label htmlFor="floatingSearchBox">Scholar Name</label>
+                            </div>
+                        </div>                        
+                        <div className='search-filter d-md-block d-sm-none col-md-2'>
+                            <div className="form-floating mb-3">
+                                <select className="form-select" id='floatingYear'>
+                                    <option value="0">All</option>
+                                    {academicYear?.length > 0 ? academicYear?.map((academicYearListData) => 
+                                        (<option key={academicYearListData.id} value={academicYearListData.academic_year}>{academicYearListData.academic_year}</option>)
+                                        ) 
+                                        : 
+                                        ''
+                                    }
+                                </select>
+                                <label htmlFor="floatingYear">Academic Year</label>
                             </div>
                         </div>
                         <div className='search-filter d-md-block d-sm-none col-md-3'>

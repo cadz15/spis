@@ -9,7 +9,7 @@ import useAuthStore from '../Store/globalStates';
 import useTitle from '../Utils/useTitle';
 
 const ScholarDocumentUpload = () => {
-    const { jwt_token, userAuth } = useAuthStore();
+    const { jwt_token, userAuth, activeAcademicYear } = useAuthStore();
     const [isLoading, setIsLoading] = useState(false);
     const [refreshList, setRefreshList] = useState(false);
     const [documentList, setDocumentList] = useState(null);
@@ -19,7 +19,7 @@ const ScholarDocumentUpload = () => {
 
     const  fetchData = () => {
         setIsLoading(true);
-        axios.get(`${process.env.REACT_APP_API_LINK}/documents?id_number=${userAuth.id_number}`, 
+        axios.get(`${process.env.REACT_APP_API_LINK}/documents?id_number=${userAuth.id_number}&academic_year=${activeAcademicYear[0].academic_year}`, 
         { headers: {
             "Authorization" : `Bearer ${jwt_token}`,
             'Accept' : 'application/json',
@@ -99,7 +99,7 @@ const ScholarDocumentUpload = () => {
                     <div className='col-md-12 col-lg-12'>
                         <div className='row'>
                             <div className='col-sm-12 col-lg-6 col-md-12 mb-3'>
-                                <UploadDocument refreshList={setRefreshList}/>
+                                <UploadDocument refreshList={setRefreshList} />
                             </div>
                             <div className='col-sm-12  col-lg-6 col-md-12 mb-3'>
                                 <ScholarUploadedDocument handleListSelect={handleListSelect} isLoading={isLoading} data={documentList} />

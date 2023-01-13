@@ -9,6 +9,7 @@ const AdminDocumentModal = (props) => {
     const { jwt_token } = useAuthStore();
 
     const downloadFile = (filename) => {
+        const fileExtension = filename.split('.');
         axios.get(`${process.env.REACT_APP_API_LINK}/download?filename=${filename}`,{
             headers: {
                 "Authorization" : `Bearer ${jwt_token}`,
@@ -18,7 +19,17 @@ const AdminDocumentModal = (props) => {
                 },
             responseType: 'blob', // Important
           }).then((response) => {
-            fileDownload(response.data, filename);
+            console.log(response);
+            let type = '';
+            if(fileExtension[1] === 'pdf'){
+                type = 'application/pdf';
+            }else{
+                type = `image/${fileExtension[1]}`;
+            }
+
+            const file = new Blob([response.data], {type: type});
+            // fileDownload(response.data, filename);
+            window.open(URL.createObjectURL(file))
           });
     }
 
@@ -27,7 +38,7 @@ const AdminDocumentModal = (props) => {
 
 
         await axios.put(`${process.env.REACT_APP_API_LINK}/documents/${props.data[0]?.document_histories[0].id}`, 
-        { status},
+        { status },
         { headers: {
             "Authorization" : `Bearer ${jwt_token}`,
             'Accept' : 'application/json',

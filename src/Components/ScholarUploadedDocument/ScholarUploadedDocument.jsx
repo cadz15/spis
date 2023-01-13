@@ -21,6 +21,7 @@ const ScholarUploadedDocument = (props) => {
                             <tr>
                                 <th scope="col">Scholar</th>
                                 <th scope="col">Scholarship</th>
+                                <th scope="col">Document For</th>
                                 <th scope="col">Document</th>
                                 <th scope="col">Status</th>
                             </tr>
@@ -33,6 +34,7 @@ const ScholarUploadedDocument = (props) => {
                             <tr key={documentData.id} tabIndex={documentData.id} className={`cursor-pointer`}  onClick={props.handleListSelect}>
                                 <td >{userAuth.first_name} {userAuth.last_name}</td>
                                 <td>{userAuth.scholarship_name}</td>
+                                <td>{documentData.document_for}</td>
                                 <td>{documentData.filename.substring(0, 20)}...</td>
                                 <td ><span className={`document-${documentData.document_histories[0].status}`}>{documentData.document_histories[0].status}</span></td>
                             </tr>

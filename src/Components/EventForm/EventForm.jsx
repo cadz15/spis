@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import Multiselect from 'multiselect-react-dropdown';
-import { useEffect } from 'react';
 import axios from 'axios';
 import useAuthStore from '../../Store/globalStates';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
-const EventForm = () => {
-    const { jwt_token } = useAuthStore();
-    const [recipientList, setRecipientList] = useState([]);
+const EventForm = (props) => {
+    const { jwt_token, activeAcademicYear } = useAuthStore();
+    // const [recipientList, setRecipientList] = useState([]);
     const [selectedRecipient, setSelectedRecipient] = useState([]);
     const [hideError, setHideError] = useState(true);
     const [hasError, setHasError] = useState({});
+    const [preSelectedValues, setPreSelectedValues] = useState([]);
     const navigate = useNavigate();
 
     const handleCreateEvent = async() => {
@@ -19,9 +19,10 @@ const EventForm = () => {
         const event_start = document.getElementById('floatingEventDateFrom').value;
         const event_end = document.getElementById('floatingEventDateTo').value;
         const details = document.getElementById('floatinEventDetail').value;
+        const academic_year = activeAcademicYear[0].academic_year;
 
-        await axios.post(`${process.env.REACT_APP_API_LINK}/events`, 
-        { title, event_start, event_end, recipients: selectedRecipient, details},
+        await axios.post(`${process.env.REACT_APP_API_LINK}/events?academic_year=${academic_year}`, 
+        { title, event_start, event_end, academic_year, recipients: selectedRecipient, details},
         { headers: {
             "Authorization" : `Bearer ${jwt_token}`,
             'Accept' : 'application/json',
@@ -47,29 +48,30 @@ const EventForm = () => {
     }
 
     const handleMultiselectSelect = (selectedList, selectedItem) => {
-        setSelectedRecipient((current) => [...current, selectedItem.id])
+        // setSelectedRecipient((current) => [...current, selectedItem.id])
+        if (selectedItem.id === 0 ){
+            setPreSelectedValues(props.recipientList);
+            setSelectedRecipient(props.recipientList.map((recipient) => recipient.id));
+        }else {
+            setSelectedRecipient((current) => [...current, selectedItem.id]);
+            setPreSelectedValues((current) => current.filter((recipient) => recipient.id !== 0));
+        }
     }
 
     const handleMultiselectRemove = (selectedList, removedItem) => {
-        setSelectedRecipient((current) => current.filter((recipient) => recipient !== removedItem.id));
+        // setSelectedRecipient((current) => current.filter((recipient) => recipient !== removedItem.id));
+        if (removedItem.id === 0){
+            setPreSelectedValues([]);
+            setSelectedRecipient([]);
+        }else{
+            setSelectedRecipient((current) => current.filter((recipient) => recipient !== removedItem.id));        
+            setPreSelectedValues((current) => current.filter((recipient) => recipient !== removedItem)); 
+    
+            setSelectedRecipient((current) => current.filter((recipient) => recipient !== 0));
+            setPreSelectedValues((current) => current.filter((recipient) => recipient.id !== 0));              
+        }
     }
 
-    useEffect(() => {
-        axios.get(`${process.env.REACT_APP_API_LINK}/scholars/recipient`, 
-        {headers: {
-            "Authorization" : `Bearer ${jwt_token}`,
-            'Accept' : 'application/json',
-            'Content-Type': 'application/json',
-            'withCredentials': 'true'
-            }
-            }
-        )
-        .then((response) => {
-            setRecipientList(response.data);
-        })
-        .catch((error) => console.log(error));
-
-    },[])
 
   return (
     <div className="card latest-update-card p-0">
@@ -110,13 +112,14 @@ const EventForm = () => {
                 </div>
                 <div className='row mb-3'>
                     <Multiselect
-                        options={recipientList} // Options to display in the dropdown
+                        options={props.recipientList} // Options to display in the dropdown
                         groupBy='scholarship_name'
                         displayValue="display_name" // Property name to display in the dropdown options
                         showCheckbox
                         placeholder='Select Recipient'
                         onSelect={handleMultiselectSelect}
                         onRemove={handleMultiselectRemove}
+                        selectedValues={preSelectedValues}
                     />
                 </div>
                 <div className='row'>

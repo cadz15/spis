@@ -1,11 +1,11 @@
 import React from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import useAuthStore from '../../Store/globalStates';
 import './DocumentCard.css';
 
 const DocumentCard = (props) => {
     const {  scholarshipData } = useAuthStore();
-   
   return (
     <div className="card latest-update-card p-0">
         <div className="card-header p-3">

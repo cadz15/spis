@@ -8,7 +8,7 @@ import useAuthStore from '../Store/globalStates';
 import useTitle from '../Utils/useTitle';
 
 const ScholarQuery = () => {
-    const { jwt_token, userAuth } = useAuthStore();
+    const { jwt_token, userAuth, activeAcademicYear } = useAuthStore();
     const [isLoading, setIsLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [refreshList, setRefreshList] = useState(false);
@@ -30,7 +30,7 @@ const ScholarQuery = () => {
 
     const  fetchData = () => {
         setIsLoading(true);
-        axios.get(`${process.env.REACT_APP_API_LINK}/concern/scholar/${userAuth.id}`, 
+        axios.get(`${process.env.REACT_APP_API_LINK}/concern/scholar/${userAuth.id}?academic_year=${activeAcademicYear[0].academic_year}`, 
         { headers: {
             "Authorization" : `Bearer ${jwt_token}`,
             'Accept' : 'application/json',

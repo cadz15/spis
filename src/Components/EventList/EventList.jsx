@@ -19,11 +19,11 @@ const EventList = (props) => {
             </div>
         </div>
         <div className="card-body p-0 m-0 scrollable-list">
-            <div className={`event-list-table-container ${props.isLoading? 'list-loading':''}`}>
+            <div className={` ${props.isLoading? 'list-loading':''}`}>
                 
             <table className={`table table-hover event-list-table  `}>
-                <tbody>          
-                    {props.data?.length > 0 ? 
+                <tbody>
+                    {props?.data?.length > 0 ? 
                         props.data?.map((eventsData) => (
                             <tr key={eventsData.id} tabIndex={eventsData.id} onClick={(e) => {props?.handleListSelect(e)}} className="cursor-pointer">
                                 <td className='px-4'>

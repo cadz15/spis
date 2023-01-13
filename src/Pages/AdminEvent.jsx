@@ -14,13 +14,13 @@ const AdminEvent = () => {
     const [eventsList, setEventsList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [recipientList, setRecipientList] = useState([]);
-    const { jwt_token } = useAuthStore();
+    const { jwt_token, activeAcademicYear } = useAuthStore();
 
     useTitle('Events'); // PAGE TITLE
 
     const  fetchData = () => {
         setIsLoading(true);
-        axios.get(`${process.env.REACT_APP_API_LINK}/events`, 
+        axios.get(`${process.env.REACT_APP_API_LINK}/events?academic_year=${activeAcademicYear[0].academic_year}`, 
         { headers: {
             "Authorization" : `Bearer ${jwt_token}`,
             'Accept' : 'application/json',
@@ -36,8 +36,8 @@ const AdminEvent = () => {
         .catch((error) => console.log(error));
     }
 
-    const getRecipientList = () => {
-        axios.get(`${process.env.REACT_APP_API_LINK}/scholars/recipient`, 
+    const getRecipientList = async () => {
+        await axios.get(`${process.env.REACT_APP_API_LINK}/scholars/recipient?academic_year=${activeAcademicYear[0].academic_year}`, 
         {headers: {
             "Authorization" : `Bearer ${jwt_token}`,
             'Accept' : 'application/json',
@@ -47,7 +47,11 @@ const AdminEvent = () => {
             }
         )
         .then((response) => {
-            setRecipientList(response.data);
+            setRecipientList([{
+                display_name: 'All',
+                id: 0,
+                scholarship_name: 'All' 
+            }, ...response.data]);
         })
         .catch((error) => console.log(error));
     }
@@ -89,7 +93,7 @@ const AdminEvent = () => {
                         <div className='col-md-12 col-lg-12'>
                             <div className='row'>
                                 <div className='col-sm-12 col-lg-6 col-md-12 mb-3'>
-                                    <EventForm />
+                                    <EventForm  recipientList={recipientList} />
                                 </div>
                                 <div className='col-sm-12  col-lg-6 col-md-12 mb-3'>
                                     <EventList handleListSelect={handleListSelect} data={eventsList} isLoading={isLoading}/>
